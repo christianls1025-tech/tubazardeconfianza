@@ -15,12 +15,23 @@ const PAGINA_LOGIN = "login.html";
 
 /* ==========================================
    OBTENER USUARIO ACTUAL (o null si no hay sesión)
+   ------------------------------------------
+   Se añade un Promise.race con un Timeout de 5
+   segundos para evitar que la página se quede
+   cargando infinitamente si Appwrite tarda en
+   responder o se bloquea la conexión.
 ========================================== */
 
 export async function obtenerUsuarioActual() {
     try {
-        return await account.get();
+        // Timeout de 5 segundos (5000 ms)
+        const timeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Tiempo de espera agotado")), 5000)
+        );
+
+        return await Promise.race([account.get(), timeout]);
     } catch (error) {
+        console.error("Error al obtener usuario (o timeout):", error);
         return null;
     }
 }
@@ -50,18 +61,9 @@ export async function cerrarSesion() {
 /* ==========================================
    PROTEGER UNA PÁGINA
    ------------------------------------------
-   Se debe llamar ANTES de mostrar cualquier
-   contenido protegido (idealmente antes del
-   DOMContentLoaded). Si no hay sesión activa,
-   redirige de inmediato al login y devuelve
-   null; el código que la llama debe evitar
-   seguir ejecutándose en ese caso. Si hay
-   sesión, devuelve el usuario.
-
-   Se usa location.replace() (no location.href)
-   para que la página de login no quede en el
-   historial y el botón "atrás" no regrese al
-   panel protegido.
+   Si la sesión expiró o no existe, redirige a
+   login. Si hay un error de conexión o timeout,
+   también redirige o devuelve null.
 ========================================== */
 
 export async function protegerPagina() {
