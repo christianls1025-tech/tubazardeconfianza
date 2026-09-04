@@ -3,6 +3,25 @@ import {
     suscribirseAProductos
 } from "./productos-service.js";
 
+import {
+    protegerPagina,
+    cerrarSesion
+} from "./auth.js";
+
+/* ==========================================
+   PROTEGER EL ACCESO A ESTA PÁGINA
+   ------------------------------------------
+   Igual que en admin.js: se valida ANTES que
+   cualquier otra cosa si hay una sesión activa
+   en Appwrite. Si no la hay, protegerPagina()
+   ya redirigió a login.html y el resto de este
+   archivo no se ejecuta.
+========================================== */
+
+const usuarioActual = await protegerPagina();
+
+if (usuarioActual) {
+
 let graficaDistribucion = null;
 
 let tipoGraficaActual = "pie";
@@ -24,6 +43,25 @@ let productosCargados = [];
 document.addEventListener(
     "DOMContentLoaded",
     async () => {
+
+        // Revela el contenido protegido y quita la
+        // pantalla de "Verificando acceso...".
+        document.body.classList.add("sesion-verificada");
+
+        const nombreUsuarioAdmin =
+            document.getElementById("nombreUsuarioAdmin");
+
+        if (nombreUsuarioAdmin) {
+            nombreUsuarioAdmin.textContent =
+                usuarioActual.name || usuarioActual.email;
+        }
+
+        const btnCerrarSesion =
+            document.getElementById("btnCerrarSesion");
+
+        if (btnCerrarSesion) {
+            btnCerrarSesion.addEventListener("click", cerrarSesion);
+        }
 
         /* ==================================
            BOTONES: PASTEL / BARRAS
@@ -1014,5 +1052,7 @@ function escapeHTML(
     div.textContent = texto;
 
     return div.innerHTML;
+
+}
 
 }
