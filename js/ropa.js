@@ -47,6 +47,35 @@ document.addEventListener("DOMContentLoaded", () => {
         comprado: 2
     };
 
+    /* Enlace del grupo de WhatsApp */
+    const GRUPO_WHATSAPP = "https://chat.whatsapp.com/L27TM6CVe0R6IFYzoIs9O5";
+
+
+    /* ==========================================
+       CARGAR SWEETALERT2 (dinámicamente)
+    ========================================== */
+
+    let sweetAlertLoaded = false;
+
+    function cargarSweetAlert() {
+        return new Promise((resolve, reject) => {
+            if (window.Swal) {
+                sweetAlertLoaded = true;
+                resolve(window.Swal);
+                return;
+            }
+
+            const script = document.createElement("script");
+            script.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
+            script.onload = () => {
+                sweetAlertLoaded = true;
+                resolve(window.Swal);
+            };
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
 
     /* ==========================================
        CARGAR PRODUCTOS
@@ -62,18 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             loader.classList.add("d-none");
 
-            crearFiltros();
+            reconstruirFiltrosCategorias();
 
             mostrarProductos(productos);
 
         } catch (error) {
-
-            /*
-             * Cualquier falla (sin conexión, función caída,
-             * respuesta inválida, etc.) se muestra siempre
-             * como "no hay ropa por el momento", nunca como
-             * un error técnico visible para la clienta.
-             */
 
             console.error("Error al cargar productos:", error);
 
@@ -108,46 +130,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ==========================================
-       CREAR FILTROS
+       RECONSTRUIR FILTROS DE CATEGORÍAS
+       (se llama al cargar y en tiempo real)
     ========================================== */
 
-    function crearFiltros() {
+    function reconstruirFiltrosCategorias() {
 
-        const categorias = [
-            ...new Set(
-                productos
-                    .map(producto => producto.categoria)
-                    .filter(Boolean)
-            )
-        ];
+        // Guardar el botón "Todas" (primer hijo)
+        const botonTodas = filtros.querySelector('[data-categoria="todas"]');
+        if (!botonTodas) return;
+
+        // Eliminar todos los botones excepto "Todas"
+        const hijos = [...filtros.children];
+        hijos.forEach(hijo => {
+            if (hijo !== botonTodas) {
+                filtros.removeChild(hijo);
+            }
+        });
+
+        // Obtener categorías únicas de los productos actuales
+        const categorias = [...new Set(
+            productos
+                .map(p => p.categoria)
+                .filter(Boolean)
+        )];
 
         categorias.forEach(categoria => {
-            agregarBotonCategoria(categoria);
+            const boton = document.createElement("button");
+            boton.className = "btn-filtro";
+            boton.dataset.categoria = categoria;
+            boton.textContent = categoria;
+
+            boton.addEventListener("click", () => {
+                seleccionarFiltro(filtros, boton);
+                filtroCategoriaActual = categoria;
+                aplicarFiltros();
+            });
+
+            filtros.appendChild(boton);
         });
 
+        // Asegurar que el botón "Todas" sigue seleccionado si la categoría actual no existe
+        if (filtroCategoriaActual !== "todas") {
+            const existe = categorias.some(c => c === filtroCategoriaActual);
+            if (!existe) {
+                filtroCategoriaActual = "todas";
+                seleccionarFiltro(filtros, botonTodas);
+            } else {
+                // Buscar el botón correspondiente y marcarlo
+                const botonActivo = filtros.querySelector(`[data-categoria="${filtroCategoriaActual}"]`);
+                if (botonActivo) {
+                    seleccionarFiltro(filtros, botonActivo);
+                } else {
+                    seleccionarFiltro(filtros, botonTodas);
+                    filtroCategoriaActual = "todas";
+                }
+            }
+        } else {
+            seleccionarFiltro(filtros, botonTodas);
+        }
+    }
 
-        /* Botón "Todas" (categorías) */
 
-        const botonTodas =
-            filtros.querySelector(
-                '[data-categoria="todas"]'
-            );
+    /* ==========================================
+       CREAR FILTROS DE ESTADO (ya existen en HTML)
+    ========================================== */
 
-        botonTodas.addEventListener("click", () => {
-
-            seleccionarFiltro(
-                filtros,
-                botonTodas
-            );
-
-            filtroCategoriaActual = "todas";
-
-            aplicarFiltros();
-
-        });
-
-
-        /* Botones de estado (ya existen en el HTML) */
+    function inicializarFiltrosEstado() {
 
         filtrosEstados
             .querySelectorAll(".btn-filtro")
@@ -168,51 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
             });
-
-    }
-
-
-    /* ==========================================
-       AGREGAR BOTÓN DE CATEGORÍA
-       ------------------------------------------
-       Se usa tanto al cargar la página como cuando,
-       en tiempo real, aparece una prenda con una
-       categoría nueva que todavía no tiene botón.
-       Si el botón ya existe, no hace nada (evita
-       duplicados).
-    ========================================== */
-
-    function agregarBotonCategoria(categoria) {
-
-        if (!categoria) return;
-
-        const yaExiste = [...filtros.querySelectorAll(".btn-filtro")]
-            .some(btn => btn.dataset.categoria === categoria);
-
-        if (yaExiste) return;
-
-        const boton = document.createElement("button");
-
-        boton.className = "btn-filtro";
-
-        boton.dataset.categoria = categoria;
-
-        boton.textContent = categoria;
-
-        boton.addEventListener("click", () => {
-
-            seleccionarFiltro(
-                filtros,
-                boton
-            );
-
-            filtroCategoriaActual = categoria;
-
-            aplicarFiltros();
-
-        });
-
-        filtros.appendChild(boton);
 
     }
 
@@ -761,23 +765,15 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.querySelector("#btnCerrarOpciones").addEventListener("click", cerrar);
 
         modal.querySelector("#btnIngresarGrupo").addEventListener("click", () => {
-            window.open(
-                "https://chat.whatsapp.com/L27TM6CVe0R6IFYzoIs9O5?s=cl&p=a&mlu=4&ilr=4",
-                "_blank",
-                "noopener"
-            );
+            window.open(GRUPO_WHATSAPP, "_blank", "noopener");
         });
 
+        // ==========================================
+        // NUEVO FLUJO DEL BOTÓN COMPARTIR FOTO + "YO"
+        // ==========================================
         modal.querySelector("#btnCompartirPrenda").addEventListener("click", async () => {
-            const compartido = await compartirPrendaPorWhatsapp(imagenURL);
-            if (!compartido) {
-                const copiado = await copiarTexto("Yo");
-                if (copiado) {
-                    alert("Se copió “Yo”. Ahora abre WhatsApp y adjunta la foto de la prenda.");
-                } else {
-                    alert("No se pudo abrir el compartir automático. Usa “Copiar Yo” y después adjunta la foto.");
-                }
-            }
+            await manejarCompartirFotoYo(imagenURL);
+            cerrar(); // cerrar modal después de la acción
         });
 
         modal.querySelector("#btnCopiarYo").addEventListener("click", async () => {
@@ -796,6 +792,104 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.querySelector(".modal-opciones-overlay").addEventListener("click", (evento) => {
             if (evento.target.classList.contains("modal-opciones-overlay")) cerrar();
         });
+    }
+
+
+    /* ==========================================
+       MANEJAR COMPARTIR FOTO + "YO"
+    ========================================== */
+
+    async function manejarCompartirFotoYo(imagenURL) {
+
+        // Cargar SweetAlert2 si no está cargado
+        let Swal;
+        try {
+            Swal = await cargarSweetAlert();
+        } catch (e) {
+            console.error("No se pudo cargar SweetAlert2", e);
+            // Si no se puede cargar, mostrar un alert simple y abrir grupo
+            alert("Se copió el mensaje 'Yo' y la imagen. Abre el grupo de WhatsApp y pega el mensaje con la foto.");
+            window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+            return;
+        }
+
+        // Función auxiliar para mostrar SweetAlert y abrir grupo
+        const mostrarExitoYAbirGrupo = (mensaje) => {
+            Swal.fire({
+                icon: "success",
+                title: "¡Listo!",
+                text: mensaje || "Se ha copiado la información al portapapeles.",
+                confirmButtonText: "Abrir grupo",
+                confirmButtonColor: "#25d366",
+                preConfirm: () => {
+                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                }
+            });
+        };
+
+        // 1. Intentar usar navigator.share (prioritario en móviles)
+        if (navigator.share && navigator.canShare) {
+            try {
+                const respuesta = await fetch(imagenURL);
+                const blobImagen = await respuesta.blob();
+                const extension = (blobImagen.type.split("/")[1] || "jpg").split("+")[0];
+                const archivoImagen = new File(
+                    [blobImagen],
+                    `prenda.${extension}`,
+                    { type: blobImagen.type }
+                );
+                if (navigator.canShare({ files: [archivoImagen], text: "Yo" })) {
+                    await navigator.share({
+                        files: [archivoImagen],
+                        text: "Yo"
+                    });
+                    // Si el usuario completa el share, mostramos éxito
+                    mostrarExitoYAbirGrupo("¡Compartido exitosamente! Ahora abre el grupo de WhatsApp.");
+                    return;
+                }
+            } catch (error) {
+                if (error && error.name === "AbortError") {
+                    // Usuario canceló, no mostramos nada
+                    return;
+                }
+                console.warn("Falló navigator.share, pasamos a clipboard:", error);
+            }
+        }
+
+        // 2. Intentar copiar imagen + texto al portapapeles (ClipboardItem)
+        try {
+            const respuesta = await fetch(imagenURL);
+            const blobImagen = await respuesta.blob();
+            // Intentar escribir con ClipboardItem
+            const item = new ClipboardItem({
+                [blobImagen.type]: blobImagen,
+                "text/plain": new Blob(["Yo"], { type: "text/plain" })
+            });
+            await navigator.clipboard.write([item]);
+            mostrarExitoYAbirGrupo("La imagen y el texto 'Yo' se copiaron al portapapeles. Abre el grupo de WhatsApp y pega el contenido.");
+            return;
+        } catch (error) {
+            console.warn("Falló copiar imagen al portapapeles, copiamos solo texto:", error);
+        }
+
+        // 3. Fallback: copiar solo texto "Yo"
+        try {
+            await navigator.clipboard.writeText("Yo");
+            mostrarExitoYAbirGrupo("Se copió el texto 'Yo'. Guarda la imagen manualmente (usa el botón 'Abrir foto') y pégala en el grupo junto con el mensaje.");
+            return;
+        } catch (error) {
+            console.error("No se pudo copiar ni texto:", error);
+            Swal.fire({
+                icon: "error",
+                title: "No se pudo copiar",
+                text: "Copia manualmente el texto 'Yo' y comparte la foto en el grupo.",
+                confirmButtonText: "Abrir grupo",
+                confirmButtonColor: "#25d366",
+                preConfirm: () => {
+                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                }
+            });
+        }
     }
 
 
@@ -824,77 +918,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ==========================================
-       COMPARTIR LA PRENDA (IMAGEN + "YO") POR
-       WHATSAPP USANDO EL PANEL NATIVO DE COMPARTIR
+       COPIAR TEXTO (auxiliar)
     ========================================== */
 
-    async function compartirPrendaPorWhatsapp(imagenURL) {
-
-        if (
-            !imagenURL ||
-            !navigator.share ||
-            !navigator.canShare
-        ) {
-            return false;
-        }
-
+    async function copiarTexto(texto) {
         try {
-
-            const respuesta =
-                await fetch(imagenURL);
-
-            const blobImagen =
-                await respuesta.blob();
-
-            const extension =
-                (blobImagen.type.split("/")[1] || "jpg")
-                    .split("+")[0];
-
-            const archivoImagen =
-                new File(
-                    [blobImagen],
-                    `prenda.${extension}`,
-                    { type: blobImagen.type }
-                );
-
-            if (
-                !navigator.canShare(
-                    { files: [archivoImagen] }
-                )
-            ) {
-                return false;
-            }
-
-            await navigator.share({
-                files: [archivoImagen],
-                text: "Yo"
-            });
-
+            await navigator.clipboard.writeText(texto);
             return true;
-
-        } catch (error) {
-
-            /*
-             * Si la clienta cierra o cancela el panel
-             * de compartir, el navegador también lanza
-             * un error (AbortError); en ese caso no
-             * queremos mostrar el plan B, así que se
-             * trata como "manejado".
-             */
-
-            if (error && error.name === "AbortError") {
-                return true;
-            }
-
-            console.error(
-                "No se pudo compartir la imagen directamente:",
-                error
-            );
-
+        } catch {
             return false;
-
         }
-
     }
 
 
@@ -1134,8 +1167,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     productos.push(producto);
                 }
 
-                agregarBotonCategoria(producto.categoria);
-
             } else if (tipo === "actualizar") {
 
                 const indice =
@@ -1147,8 +1178,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     productos.push(producto);
                 }
 
-                agregarBotonCategoria(producto.categoria);
-
             } else if (tipo === "eliminar") {
 
                 productos = productos.filter(
@@ -1158,6 +1187,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             productos = ordenarProductos(productos);
+
+            // Reconstruir filtros de categorías (actualiza los botones)
+            reconstruirFiltrosCategorias();
 
             loader.classList.add("d-none");
 
@@ -1172,6 +1204,10 @@ document.addEventListener("DOMContentLoaded", () => {
        INICIAR
     ========================================== */
 
+    // Inicializar filtros de estado (ya están en el HTML)
+    inicializarFiltrosEstado();
+
+    // Cargar productos y empezar tiempo real
     cargarProductos();
 
     iniciarTiempoReal();

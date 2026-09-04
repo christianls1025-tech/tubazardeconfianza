@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let paginaActual = 1;
 
+    const GRUPO_WHATSAPP = "https://chat.whatsapp.com/L27TM6CVe0R6IFYzoIs9O5";
 
 
     /* ==========================================
@@ -771,17 +772,21 @@ document.addEventListener("DOMContentLoaded", () => {
             document.head.appendChild(estilosSweetAlert);
         }
 
-        const mostrarSweetAlert = async (icon, title, text) => {
+        const mostrarSweetAlert = async (icon, title, text, confirmText = "Aceptar", callback = null) => {
             try {
                 const Swal = await cargarSweetAlert();
                 Swal.fire({
                     icon,
                     title,
                     text,
-                    confirmButtonText: "Aceptar",
+                    confirmButtonText: confirmText,
                     confirmButtonColor: "#198754",
                     customClass: {
                         container: "swal2-container-admin"
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed && callback) {
+                        callback();
                     }
                 });
             } catch (error) {
@@ -807,13 +812,16 @@ document.addEventListener("DOMContentLoaded", () => {
                         mostrarSweetAlert(
                             "success",
                             "¡Información copiada!",
-                            "La categoría, descripción y precio se copiaron al portapapeles. Ahora puedes abrir WhatsApp y adjuntar la foto."
+                            "La categoría, descripción y precio se copiaron al portapapeles. Ahora puedes abrir WhatsApp y adjuntar la foto.",
+                            "Abrir grupo",
+                            () => window.open(GRUPO_WHATSAPP, "_blank", "noopener")
                         );
                     } catch (error) {
                         await mostrarSweetAlert(
                             "warning",
                             "No se pudo compartir automáticamente",
-                            "Usa “Copiar categoría, descripción y precio” y después adjunta la foto."
+                            "Usa “Copiar categoría, descripción y precio” y después adjunta la foto.",
+                            "Aceptar"
                         );
                     }
                 }
@@ -825,16 +833,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 try {
                     await navigator.clipboard.writeText(textoCompartir);
+                    // Mostrar SweetAlert y abrir grupo al hacer OK
                     await mostrarSweetAlert(
                         "success",
                         "¡Información copiada!",
-                        "La categoría, descripción y precio se copiaron al portapapeles."
+                        "La categoría, descripción y precio se copiaron al portapapeles.",
+                        "Abrir grupo",
+                        () => window.open(GRUPO_WHATSAPP, "_blank", "noopener")
                     );
                 } catch (error) {
                     mostrarSweetAlert(
                         "error",
                         "No se pudo copiar",
-                        "No fue posible copiar automáticamente la categoría, descripción y precio."
+                        "No fue posible copiar automáticamente la categoría, descripción y precio.",
+                        "Aceptar"
                     );
                 }
             });
