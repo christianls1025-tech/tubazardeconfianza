@@ -1,6 +1,7 @@
 import {
     obtenerProductos,
     urlFoto,
+    urlDescargaFoto,
     suscribirseAProductos
 } from "./productos-service.js";
 
@@ -388,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.head.appendChild(estilo);
     }
 
-    function mostrarOpcionesPrenda(imagenURL) {
+    function mostrarOpcionesPrenda(imagenURL, fotoId) {
         insertarEstilosModalPrenda();
 
         const modalAnterior = document.getElementById("modalOpcionesPrenda");
@@ -439,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         modal.querySelector("#btnCompartirPrenda").addEventListener("click", async () => {
-            await manejarCompartirFotoYo(imagenURL);
+            await manejarCompartirFotoYo(imagenURL, fotoId);
             cerrar();
         });
 
@@ -466,7 +467,11 @@ document.addEventListener("DOMContentLoaded", () => {
        (con descarga directa y apertura de grupo sin pop-ups)
     ========================================== */
 
-    async function manejarCompartirFotoYo(imagenURL) {
+    async function manejarCompartirFotoYo(imagenURL, fotoId) {
+        // URL con Content-Disposition: attachment -> fuerza descarga real
+        // (no depende de fetch/CORS como urlFoto).
+        const imagenDescargaURL = fotoId ? urlDescargaFoto(fotoId) : imagenURL;
+
         let Swal;
         try {
             Swal = await cargarSweetAlert();
@@ -546,7 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Mostrar SweetAlert con opciones (descarga directa, abrir foto, abrir grupo)
-            await Swal.fire({
+            const resultado = await Swal.fire({
                 icon: "warning",
                 title: "No se pudo copiar la imagen",
                 text: "El texto 'Yo' se copió, pero la imagen no se pudo adjuntar. Puedes descargar la foto o abrirla para guardarla manualmente.",
@@ -560,35 +565,41 @@ document.addEventListener("DOMContentLoaded", () => {
                 denyButtonColor: "#6c757d",
                 cancelButtonColor: "#25d366",
                 customClass: { container: "swal2-container-ropa" },
-                preConfirm: async () => {
-                    // Descarga directa usando fetch + blob
-                    try {
-                        const resp = await fetch(imagenURL);
-                        const blob = await resp.blob();
-                        const url = URL.createObjectURL(blob);
-                        const enlace = document.createElement("a");
-                        enlace.href = url;
-                        enlace.download = "prenda.jpg";
-                        document.body.appendChild(enlace);
-                        enlace.click();
-                        document.body.removeChild(enlace);
-                        URL.revokeObjectURL(url);
-                    } catch (e) {
-                        console.error("Error al descargar:", e);
-                        // Fallback: abrir en nueva pestaña
-                        window.open(imagenURL, "_blank", "noopener");
-                    }
-                    return false; // no cerrar
+                preConfirm: () => {
+                    // Descarga directa: al usar la URL de getFileDownload
+                    // (Content-Disposition: attachment) el navegador la
+                    // descarga sola, sin necesidad de fetch/blob ni CORS.
+                    descargarImagen(imagenDescargaURL);
+                    return false; // no cerrar el diálogo
                 },
                 preDeny: () => {
                     window.open(imagenURL, "_blank", "noopener");
-                    return false; // no cerrar
-                },
-                preCancel: () => {
-                    location.href = GRUPO_WHATSAPP;
+                    return false; // no cerrar el diálogo
                 }
             });
+
+            // SweetAlert2 no tiene "preCancel": el botón "Abrir grupo" es el
+            // botón de Cancelar, así que se detecta aquí con el resultado.
+            if (resultado.dismiss === Swal.DismissReason.cancel) {
+                location.href = GRUPO_WHATSAPP;
+            }
         }
+    }
+
+    /* ==========================================
+       DESCARGAR IMAGEN (usando URL con
+       Content-Disposition: attachment)
+    ========================================== */
+
+    function descargarImagen(url) {
+        if (!url) return;
+        const enlace = document.createElement("a");
+        enlace.href = url;
+        enlace.download = "prenda.jpg";
+        enlace.rel = "noopener";
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
     }
 
     function crearBotonWhatsapp(producto, esOverlay = false) {
@@ -598,7 +609,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const imagenURL = urlFoto(producto.foto);
         whatsapp.addEventListener("click", (evento) => {
             evento.preventDefault();
-            mostrarOpcionesPrenda(imagenURL);
+            mostrarOpcionesPrenda(imagenURL, producto.foto);
         });
         whatsapp.innerHTML = `<i class="bi bi-whatsapp"></i> YO`;
         return whatsapp;

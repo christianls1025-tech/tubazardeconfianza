@@ -70,6 +70,19 @@ export function urlFoto(fileId) {
         .toString();
 }
 
+/* URL de DESCARGA forzada (Content-Disposition: attachment).
+   A diferencia de urlFoto (getFileView), esta URL hace que el
+   navegador descargue el archivo directamente en vez de mostrarlo,
+   y no depende de que fetch() tenga permiso CORS. */
+
+export function urlDescargaFoto(fileId) {
+    if (!fileId) return "";
+
+    return storage
+        .getFileDownload(BUCKET_PRENDAS_ID, fileId)
+        .toString();
+}
+
 /* ==========================================
    OBTENER TODAS LAS PRENDAS
 ========================================== */
