@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Iniciar sesión | Tu Bazar de Confianza</title>
+
+    <meta
+        name="description"
+        content="Acceso al panel de administración de Tu Bazar de Confianza."
+    >
+
+    <!-- Icono de pestaña -->
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(160deg, #f9edf3 0%, #fff 55%);
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+        }
+
+        .login-tarjeta {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            border-radius: 18px;
+            padding: 40px 32px;
+            box-shadow: 0 20px 60px rgba(142, 40, 85, 0.12);
+            text-align: center;
+        }
+
+        .login-marca {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: #8e2855;
+            margin-bottom: 4px;
+        }
+
+        .login-marca span {
+            display: block;
+            font-size: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            color: #9b7b89;
+        }
+
+        .login-titulo {
+            margin: 24px 0 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .login-tarjeta .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            text-align: left;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .login-tarjeta .form-control {
+            border-radius: 10px;
+            padding: 10px 14px;
+            border: 1px solid #e5d3dc;
+        }
+
+        .login-tarjeta .form-control:focus {
+            border-color: #8e2855;
+            box-shadow: 0 0 0 0.2rem rgba(142, 40, 85, 0.15);
+        }
+
+        .btn-login {
+            width: 100%;
+            margin-top: 10px;
+            padding: 11px 16px;
+            border: 0;
+            border-radius: 10px;
+            background: #8e2855;
+            color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-login:hover {
+            background: #732046;
+        }
+
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        .login-error {
+            margin-top: 16px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: #fdecea;
+            color: #b3261e;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .login-volver {
+            display: inline-block;
+            margin-top: 22px;
+            font-size: 14px;
+            color: #9b7b89;
+            text-decoration: none;
+        }
+
+        .login-volver:hover {
+            color: #8e2855;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="login-tarjeta">
+
+        <div class="login-marca">
+            Tu Bazar
+            <span>de Confianza</span>
+        </div>
+
+        <h1 class="login-titulo">
+            Acceso al panel de administración
+        </h1>
+
+        <form id="formLogin">
+
+            <div class="mb-3">
+
+                <label for="correo" class="form-label">
+                    Correo
+                </label>
+
+                <input
+                    type="email"
+                    id="correo"
+                    name="correo"
+                    class="form-control"
+                    placeholder="tucorreo@ejemplo.com"
+                    autocomplete="username"
+                    required
+                >
+
+            </div>
+
+            <div class="mb-2">
+
+                <label for="contrasena" class="form-label">
+                    Contraseña
+                </label>
+
+                <input
+                    type="password"
+                    id="contrasena"
+                    name="contrasena"
+                    class="form-control"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                id="btnIngresar"
+                class="btn-login"
+            >
+                Ingresar
+            </button>
+
+            <div
+                id="mensajeError"
+                class="login-error d-none"
+                role="alert"
+            ></div>
+
+        </form>
+
+        <a href="index.html" class="login-volver">
+            ← Volver a la tienda
+        </a>
+
+    </div>
+
+
+    <script type="module" src="js/login.js"></script>
+
+</body>
+
+</html>

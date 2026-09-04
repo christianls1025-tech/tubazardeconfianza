@@ -49,10 +49,66 @@
     <!-- CSS -->
     <link rel="stylesheet" href="css/admin.css">
 
+    <!-- ==================================================
+         PROTECCIÓN DE ACCESO
+         --------------------------------------------------
+         Mientras se valida si hay una sesión activa en
+         Appwrite, el contenido de administración permanece
+         oculto y se muestra una pantalla de "Verificando
+         acceso...". Si no hay sesión, admin.js redirige a
+         login.html sin llegar a mostrar nada. Esto evita el
+         parpadeo del contenido protegido.
+    ================================================== -->
+
+    <style>
+        .admin-protegido {
+            display: none;
+        }
+
+        .overlay-verificando-sesion {
+            position: fixed;
+            inset: 0;
+            z-index: 200000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            background: #fff;
+            font-family: 'Poppins', sans-serif;
+            color: #8e2855;
+        }
+
+        body.sesion-verificada .admin-protegido {
+            display: block;
+        }
+
+        body.sesion-verificada .overlay-verificando-sesion {
+            display: none;
+        }
+    </style>
+
 </head>
 
 
 <body>
+
+
+<!-- Pantalla mostrada mientras se verifica la sesión -->
+
+<div
+    class="overlay-verificando-sesion"
+    id="overlayVerificandoSesion"
+>
+
+    <div class="spinner-border" role="status"></div>
+
+    <p>Verificando acceso…</p>
+
+</div>
+
+
+<div class="admin-protegido">
 
 
 <!-- ==================================================
@@ -124,6 +180,26 @@
                         <i class="bi bi-bar-chart-line"></i>
                         Dashboard
                     </a>
+
+                </li>
+
+
+                <li class="nav-item d-flex align-items-center">
+
+                    <span
+                        id="nombreUsuarioAdmin"
+                        class="nav-link text-muted"
+                    ></span>
+
+                    <button
+                        type="button"
+                        id="btnCerrarSesion"
+                        class="nav-link btn btn-link p-0 ms-2"
+                        title="Cerrar sesión"
+                    >
+                        <i class="bi bi-box-arrow-right"></i>
+                        Salir
+                    </button>
 
                 </li>
 
@@ -779,6 +855,9 @@
     </div>
 
 </div>
+
+
+</div> <!-- cierre .admin-protegido -->
 
 
 
