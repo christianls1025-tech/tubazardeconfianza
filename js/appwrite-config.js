@@ -12,7 +12,7 @@
    - BUCKET_PRENDAS_ID: Storage > tu bucket.
 ========================================== */
 
-import { Client, Databases, Storage } from "https://cdn.jsdelivr.net/npm/appwrite@17.0.0/+esm";
+import { Client, Databases, Storage, Account } from "https://cdn.jsdelivr.net/npm/appwrite@17.0.0/+esm";
 
 const client = new Client();
 
@@ -22,6 +22,12 @@ client
 
 export const databases = new Databases(client);
 export const storage = new Storage(client);
+
+/* Account: servicio nativo de autenticación de Appwrite.
+   Guarda las contraseñas ya hasheadas (nunca en texto plano)
+   y maneja las sesiones de forma segura; se usa para el login
+   de administración (ver auth.js y login.js). */
+export const account = new Account(client);
 
 /* Se exporta también el cliente para poder usar
    Appwrite Realtime (client.subscribe) desde otros

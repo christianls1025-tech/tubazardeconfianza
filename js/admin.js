@@ -8,7 +8,46 @@ import {
     suscribirseAProductos
 } from "./productos-service.js";
 
+import {
+    protegerPagina,
+    cerrarSesion
+} from "./auth.js";
+
+/* ==========================================
+   PROTEGER EL ACCESO A ESTA PÁGINA
+   ------------------------------------------
+   Se valida ANTES que cualquier otra cosa si
+   hay una sesión activa en Appwrite. Si no la
+   hay, protegerPagina() ya redirigió a
+   login.html y el resto de este archivo no se
+   ejecuta (el contenido nunca llega a
+   mostrarse, ver el overlay/CSS en admin.html).
+========================================== */
+
+const usuarioActual = await protegerPagina();
+
+if (usuarioActual) {
+
 document.addEventListener("DOMContentLoaded", () => {
+
+    // Revela el contenido protegido y quita la
+    // pantalla de "Verificando acceso...".
+    document.body.classList.add("sesion-verificada");
+
+    const nombreUsuarioAdmin =
+        document.getElementById("nombreUsuarioAdmin");
+
+    if (nombreUsuarioAdmin) {
+        nombreUsuarioAdmin.textContent =
+            usuarioActual.name || usuarioActual.email;
+    }
+
+    const btnCerrarSesion =
+        document.getElementById("btnCerrarSesion");
+
+    if (btnCerrarSesion) {
+        btnCerrarSesion.addEventListener("click", cerrarSesion);
+    }
 
     const form = document.getElementById("formProducto");
 
@@ -1604,3 +1643,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+}
