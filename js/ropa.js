@@ -478,7 +478,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (e) {
             console.error("No se pudo cargar SweetAlert2", e);
             alert("No se pudo abrir el panel de compartir. Copia manualmente el texto 'Yo' y comparte la foto.");
-            location.href = GRUPO_WHATSAPP;
+            window.open(GRUPO_WHATSAPP, "_blank", "noopener");
             return;
         }
 
@@ -506,7 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         confirmButtonColor: "#25d366",
                         customClass: { container: "swal2-container-ropa" },
                         preConfirm: () => {
-                            location.href = GRUPO_WHATSAPP;
+                            window.open(GRUPO_WHATSAPP, "_blank", "noopener");
                         }
                     });
                     return;
@@ -537,7 +537,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 confirmButtonColor: "#25d366",
                 customClass: { container: "swal2-container-ropa" },
                 preConfirm: () => {
-                    location.href = GRUPO_WHATSAPP;
+                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
                 }
             });
             return;
@@ -581,7 +581,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // SweetAlert2 no tiene "preCancel": el botón "Abrir grupo" es el
             // botón de Cancelar, así que se detecta aquí con el resultado.
             if (resultado.dismiss === Swal.DismissReason.cancel) {
-                location.href = GRUPO_WHATSAPP;
+                window.open(GRUPO_WHATSAPP, "_blank", "noopener");
             }
         }
     }

@@ -3,7 +3,9 @@ import {
     crearProducto,
     actualizarProducto,
     eliminarProducto,
-    urlFoto
+    urlFoto,
+    urlDescargaFoto,
+    suscribirseAProductos
 } from "./productos-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -75,6 +77,15 @@ document.addEventListener("DOMContentLoaded", () => {
     let paginaActual = 1;
 
     const GRUPO_WHATSAPP = "https://chat.whatsapp.com/L27TM6CVe0R6IFYzoIs9O5";
+
+    /* Evita mostrar un aviso de "tiempo real" duplicado cuando el
+       cambio (crear/editar/eliminar) lo hizo esta misma sesión,
+       ya que esa acción ya muestra su propio toast de confirmación. */
+    let sinAvisoTiempoRealHasta = 0;
+
+    function suprimirAvisoTiempoReal(ms = 4000) {
+        sinAvisoTiempoRealHasta = Date.now() + ms;
+    }
 
 
     /* ==========================================
@@ -621,60 +632,200 @@ document.addEventListener("DOMContentLoaded", () => {
        COMPARTIR DESDE ADMINISTRACIÓN
     ========================================== */
 
-    async function compartirImagenAdmin(imagenURL, textoCompartir) {
+    let sweetAlertAdminCargado = false;
 
-        if (
-            !imagenURL ||
-            !navigator.share ||
-            !navigator.canShare
-        ) {
-            return false;
+    function cargarSweetAlertAdmin() {
+        return new Promise((resolve, reject) => {
+            if (window.Swal) {
+                sweetAlertAdminCargado = true;
+                resolve(window.Swal);
+                return;
+            }
+
+            const script = document.createElement("script");
+            script.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
+            script.onload = () => {
+                sweetAlertAdminCargado = true;
+                resolve(window.Swal);
+            };
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    }
+
+    // SweetAlert2 debe quedar por encima del modal de compartir.
+    if (!document.getElementById("estilosSweetAlertAdmin")) {
+        const estilosSweetAlert = document.createElement("style");
+        estilosSweetAlert.id = "estilosSweetAlertAdmin";
+        estilosSweetAlert.textContent = `
+            .swal2-container-admin {
+                z-index: 100000 !important;
+            }
+        `;
+        document.head.appendChild(estilosSweetAlert);
+    }
+
+    const mostrarSweetAlert = async (icon, title, text, confirmText = "Aceptar", callback = null) => {
+        try {
+            const Swal = await cargarSweetAlertAdmin();
+            Swal.fire({
+                icon,
+                title,
+                text,
+                confirmButtonText: confirmText,
+                confirmButtonColor: "#198754",
+                customClass: {
+                    container: "swal2-container-admin"
+                }
+            }).then((result) => {
+                if (result.isConfirmed && callback) {
+                    callback();
+                }
+            });
+        } catch (error) {
+            console.error("No se pudo cargar SweetAlert2:", error);
+        }
+    };
+
+    /* Descarga real de la imagen (Content-Disposition: attachment,
+       obtenida con urlDescargaFoto/getFileDownload). No usa fetch/blob
+       ni depende de CORS, por eso no depende de la conexión ni abre
+       una pestaña: el navegador la descarga directo. */
+    function descargarImagenAdmin(url) {
+        if (!url) return;
+        const enlace = document.createElement("a");
+        enlace.href = url;
+        enlace.download = "prenda.jpg";
+        enlace.rel = "noopener";
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+    }
+
+    /* ==========================================
+       MANEJAR COMPARTIR FOTO + INFORMACIÓN
+       (misma lógica robusta que "Compartir foto
+       + Yo" en la tienda: share nativo, luego
+       copiar imagen+texto al portapapeles, y si
+       nada de eso funciona, ofrecer descargar la
+       imagen, abrirla o abrir el grupo)
+    ========================================== */
+
+    async function manejarCompartirFotoInfoAdmin(imagenURL, imagenDescargaURL, textoCompartir) {
+        let Swal;
+        try {
+            Swal = await cargarSweetAlertAdmin();
+        } catch (e) {
+            console.error("No se pudo cargar SweetAlert2", e);
+            alert("No se pudo abrir el panel de compartir. Copia manualmente la información y comparte la foto.");
+            window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+            return;
         }
 
-        try {
-
-            const respuesta = await fetch(imagenURL);
-            const blobImagen = await respuesta.blob();
-
-            const extension =
-                (blobImagen.type.split("/")[1] || "jpg")
-                    .split("+")[0];
-
-            const archivoImagen =
-                new File(
+        // 1. Intentar usar navigator.share (imagen + texto)
+        if (navigator.share && navigator.canShare) {
+            try {
+                const respuesta = await fetch(imagenURL);
+                const blobImagen = await respuesta.blob();
+                const extension = (blobImagen.type.split("/")[1] || "jpg").split("+")[0];
+                const archivoImagen = new File(
                     [blobImagen],
                     `prenda.${extension}`,
                     { type: blobImagen.type }
                 );
+                if (navigator.canShare({ files: [archivoImagen], text: textoCompartir })) {
+                    await navigator.share({
+                        files: [archivoImagen],
+                        text: textoCompartir
+                    });
+                    await Swal.fire({
+                        icon: "success",
+                        title: "¡Compartido!",
+                        text: "La imagen y la información se compartieron correctamente.",
+                        confirmButtonText: "Abrir grupo",
+                        confirmButtonColor: "#25d366",
+                        customClass: { container: "swal2-container-admin" },
+                        preConfirm: () => {
+                            window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                        }
+                    });
+                    return;
+                }
+            } catch (error) {
+                if (error && error.name === "AbortError") {
+                    return;
+                }
+                console.warn("Falló navigator.share:", error);
+            }
+        }
 
-            if (!navigator.canShare({ files: [archivoImagen] })) {
-                return false;
+        // 2. Intentar copiar imagen + texto al portapapeles (ClipboardItem)
+        try {
+            const respuesta = await fetch(imagenURL);
+            const blobImagen = await respuesta.blob();
+            const item = new ClipboardItem({
+                [blobImagen.type]: blobImagen,
+                "text/plain": new Blob([textoCompartir], { type: "text/plain" })
+            });
+            await navigator.clipboard.write([item]);
+
+            await Swal.fire({
+                icon: "success",
+                title: "¡Imagen e información copiadas!",
+                text: "La foto y la información de la prenda están en tu portapapeles. Ve al grupo de WhatsApp y pégalos.",
+                confirmButtonText: "Abrir grupo",
+                confirmButtonColor: "#25d366",
+                customClass: { container: "swal2-container-admin" },
+                preConfirm: () => {
+                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                }
+            });
+            return;
+        } catch (error) {
+            console.warn("Falló copiar imagen al portapapeles (ClipboardItem):", error);
+
+            // Fallback: copiar solo el texto
+            try {
+                await navigator.clipboard.writeText(textoCompartir);
+            } catch (e) {
+                console.error("No se pudo copiar ni el texto:", e);
             }
 
-            await navigator.share({
-                files: [archivoImagen],
-                text: textoCompartir
+            // Mostrar SweetAlert con opciones (descarga directa, abrir foto, abrir grupo)
+            const resultado = await Swal.fire({
+                icon: "warning",
+                title: "No se pudo copiar la imagen",
+                text: "La información se copió, pero la imagen no se pudo adjuntar. Puedes descargar la foto o abrirla para guardarla manualmente.",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "📥 Descargar imagen",
+                denyButtonText: "🖼️ Abrir foto",
+                cancelButtonText: "Abrir grupo",
+                reverseButtons: true,
+                confirmButtonColor: "#3085d6",
+                denyButtonColor: "#6c757d",
+                cancelButtonColor: "#25d366",
+                customClass: { container: "swal2-container-admin" },
+                preConfirm: () => {
+                    descargarImagenAdmin(imagenDescargaURL);
+                    return false; // no cerrar el diálogo
+                },
+                preDeny: () => {
+                    window.open(imagenURL, "_blank", "noopener");
+                    return false; // no cerrar el diálogo
+                }
             });
 
-            return true;
-
-        } catch (error) {
-
-            if (error && error.name === "AbortError") {
-                return true;
+            // SweetAlert2 no tiene "preCancel": el botón "Abrir grupo" es
+            // el botón de Cancelar, así que se detecta con el resultado.
+            if (resultado.dismiss === Swal.DismissReason.cancel) {
+                window.open(GRUPO_WHATSAPP, "_blank", "noopener");
             }
-
-            console.error(
-                "No se pudo compartir la imagen:",
-                error
-            );
-
-            return false;
         }
     }
 
 
-    function mostrarOpcionesCompartirAdmin(imagenURL, textoCompartir) {
+    function mostrarOpcionesCompartirAdmin(imagenURL, imagenDescargaURL, textoCompartir) {
 
         const modalAnterior =
             document.getElementById(
@@ -746,54 +897,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const cerrar = () => modal.remove();
 
-        // Cargar SweetAlert2 si todavía no está disponible
-        const cargarSweetAlert = () => new Promise((resolve, reject) => {
-            if (window.Swal) {
-                resolve(window.Swal);
-                return;
-            }
-
-            const script = document.createElement("script");
-            script.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
-            script.onload = () => resolve(window.Swal);
-            script.onerror = reject;
-            document.head.appendChild(script);
-        });
-
-        // SweetAlert2 debe quedar por encima del modal de compartir.
-        if (!document.getElementById("estilosSweetAlertAdmin")) {
-            const estilosSweetAlert = document.createElement("style");
-            estilosSweetAlert.id = "estilosSweetAlertAdmin";
-            estilosSweetAlert.textContent = `
-                .swal2-container-admin {
-                    z-index: 100000 !important;
-                }
-            `;
-            document.head.appendChild(estilosSweetAlert);
-        }
-
-        const mostrarSweetAlert = async (icon, title, text, confirmText = "Aceptar", callback = null) => {
-            try {
-                const Swal = await cargarSweetAlert();
-                Swal.fire({
-                    icon,
-                    title,
-                    text,
-                    confirmButtonText: confirmText,
-                    confirmButtonColor: "#198754",
-                    customClass: {
-                        container: "swal2-container-admin"
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed && callback) {
-                        callback();
-                    }
-                });
-            } catch (error) {
-                console.error("No se pudo cargar SweetAlert2:", error);
-            }
-        };
-
         document
             .getElementById("cerrarCompartirAdmin")
             .addEventListener("click", cerrar);
@@ -801,30 +904,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document
             .getElementById("btnCompartirAdmin")
             .addEventListener("click", async () => {
-
-                const compartido =
-                    await compartirImagenAdmin(imagenURL, textoCompartir);
-
-                if (!compartido) {
-
-                    try {
-                        await navigator.clipboard.writeText(textoCompartir);
-                        mostrarSweetAlert(
-                            "success",
-                            "¡Información copiada!",
-                            "La categoría, descripción y precio se copiaron al portapapeles. Ahora puedes abrir WhatsApp y adjuntar la foto.",
-                            "Abrir grupo",
-                            () => window.open(GRUPO_WHATSAPP, "_blank", "noopener")
-                        );
-                    } catch (error) {
-                        await mostrarSweetAlert(
-                            "warning",
-                            "No se pudo compartir automáticamente",
-                            "Usa “Copiar categoría, descripción y precio” y después adjunta la foto.",
-                            "Aceptar"
-                        );
-                    }
-                }
+                cerrar();
+                await manejarCompartirFotoInfoAdmin(imagenURL, imagenDescargaURL, textoCompartir);
             });
 
         document
@@ -879,6 +960,10 @@ document.addEventListener("DOMContentLoaded", () => {
             ? urlFoto(producto.foto)
             : "";
 
+        const imagenDescargaURL = producto.foto
+            ? urlDescargaFoto(producto.foto)
+            : "";
+
         const textoCompartir =
             `Categoría: ${producto.categoria || "Sin categoría"}\n` +
             `Descripción: ${producto.descripcion || "Sin descripción"}\n` +
@@ -889,7 +974,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        mostrarOpcionesCompartirAdmin(imagenURL, textoCompartir);
+        mostrarOpcionesCompartirAdmin(imagenURL, imagenDescargaURL, textoCompartir);
     }
 
 
@@ -1029,6 +1114,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "success"
                 );
 
+                suprimirAvisoTiempoReal();
 
                 limpiarFormulario();
 
@@ -1094,6 +1180,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         "success"
                     );
 
+                    suprimirAvisoTiempoReal();
 
                     idEliminar = null;
 
@@ -1368,10 +1455,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ==========================================
+       TIEMPO REAL
+       ------------------------------------------
+       Escucha los cambios que ocurren en la base
+       de datos (crear, editar o eliminar una
+       prenda) y actualiza la tabla al instante,
+       sin recargar la página. Si el cambio lo hizo
+       esta misma sesión (por ejemplo al guardar el
+       formulario o eliminar desde aquí), no se
+       muestra el aviso duplicado porque ya se vio
+       su propio toast de confirmación.
+    ========================================== */
+
+    function iniciarTiempoReal() {
+
+        suscribirseAProductos(({ tipo, producto }) => {
+
+            if (tipo === "crear") {
+                if (!productos.some(p => p.id === producto.id)) {
+                    productos.push(producto);
+                }
+            } else if (tipo === "actualizar") {
+                const indice = productos.findIndex(p => p.id === producto.id);
+                if (indice !== -1) {
+                    productos[indice] = producto;
+                } else {
+                    productos.push(producto);
+                }
+            } else if (tipo === "eliminar") {
+                productos = productos.filter(p => p.id !== producto.id);
+            }
+
+            mostrarTabla();
+
+            if (Date.now() < sinAvisoTiempoRealHasta) return;
+
+            const mensajes = {
+                crear: `Se agregó una nueva prenda: ${producto.descripcion || "Sin descripción"}`,
+                actualizar: `Se actualizó una prenda: ${producto.descripcion || "Sin descripción"}`,
+                eliminar: "Se eliminó una prenda."
+            };
+
+            mostrarToast(
+                mensajes[tipo] || "Hubo un cambio en las prendas.",
+                "success"
+            );
+
+        });
+
+    }
+
+
+
+    /* ==========================================
        INICIO
     ========================================== */
 
     cargarProductos();
+
+    iniciarTiempoReal();
 
 
 
