@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ==========================================
        CARGAR SWEETALERT2 (dinámicamente)
+       con z-index alto para estar encima de modales
     ========================================== */
 
     let sweetAlertLoaded = false;
@@ -61,6 +62,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return new Promise((resolve, reject) => {
             if (window.Swal) {
                 sweetAlertLoaded = true;
+                // Asegurar z-index alto si ya estaba cargado
+                asegurarZIndexSweetAlert();
                 resolve(window.Swal);
                 return;
             }
@@ -69,11 +72,28 @@ document.addEventListener("DOMContentLoaded", () => {
             script.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
             script.onload = () => {
                 sweetAlertLoaded = true;
+                asegurarZIndexSweetAlert();
                 resolve(window.Swal);
             };
             script.onerror = reject;
             document.head.appendChild(script);
         });
+    }
+
+    function asegurarZIndexSweetAlert() {
+        if (!document.getElementById("estilosSweetAlertRopa")) {
+            const estilos = document.createElement("style");
+            estilos.id = "estilosSweetAlertRopa";
+            estilos.textContent = `
+                .swal2-container-ropa {
+                    z-index: 100000 !important;
+                }
+                .swal2-container-ropa .swal2-popup {
+                    z-index: 100001 !important;
+                }
+            `;
+            document.head.appendChild(estilos);
+        }
     }
 
 
@@ -797,7 +817,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ==========================================
        MANEJAR COMPARTIR FOTO + "YO"
-       (mejorado para copiar imagen y texto)
+       (mejorado: z-index alto y botones sin cerrar)
     ========================================== */
 
     async function manejarCompartirFotoYo(imagenURL) {
@@ -808,7 +828,6 @@ document.addEventListener("DOMContentLoaded", () => {
             Swal = await cargarSweetAlert();
         } catch (e) {
             console.error("No se pudo cargar SweetAlert2", e);
-            // Fallback simple
             alert("No se pudo abrir el panel de compartir. Copia manualmente el texto 'Yo' y comparte la foto.");
             window.open(GRUPO_WHATSAPP, "_blank", "noopener");
             return;
@@ -837,6 +856,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         text: "La imagen y el mensaje se compartieron correctamente.",
                         confirmButtonText: "Abrir grupo",
                         confirmButtonColor: "#25d366",
+                        customClass: { container: "swal2-container-ropa" },
                         preConfirm: () => {
                             window.open(GRUPO_WHATSAPP, "_blank", "noopener");
                         }
@@ -869,6 +889,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 text: "La foto y el mensaje 'Yo' están en tu portapapeles. Ve al grupo de WhatsApp y pégalos.",
                 confirmButtonText: "Abrir grupo",
                 confirmButtonColor: "#25d366",
+                customClass: { container: "swal2-container-ropa" },
                 preConfirm: () => {
                     window.open(GRUPO_WHATSAPP, "_blank", "noopener");
                 }
@@ -884,7 +905,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error("No se pudo copiar ni el texto:", e);
             }
 
-            // Mostrar SweetAlert con opciones para descargar/abrir la foto
+            // Mostrar SweetAlert con opciones (botones sin cerrar)
             await Swal.fire({
                 icon: "warning",
                 title: "No se pudo copiar la imagen",
@@ -898,26 +919,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 confirmButtonColor: "#3085d6",
                 denyButtonColor: "#6c757d",
                 cancelButtonColor: "#25d366",
+                customClass: { container: "swal2-container-ropa" },
                 preConfirm: () => {
-                    // Descargar imagen
+                    // Descargar imagen sin abrirla y sin cerrar el alert
                     const enlace = document.createElement("a");
                     enlace.href = imagenURL;
                     enlace.download = "prenda.jpg";
                     document.body.appendChild(enlace);
                     enlace.click();
                     document.body.removeChild(enlace);
-                    // Después de descargar, abrir grupo
-                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                    // Devolvemos false para que el alert no se cierre
+                    return false;
                 },
                 preDeny: () => {
-                    // Abrir foto en nueva pestaña
+                    // Abrir foto en nueva pestaña sin cerrar el alert
                     window.open(imagenURL, "_blank", "noopener");
-                    // Luego abrir grupo
-                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                    return false;
                 },
                 preCancel: () => {
-                    // Solo abrir grupo
+                    // Abrir grupo y cerrar el alert
                     window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                    // No devolvemos nada, se cierra
                 }
             });
         }
