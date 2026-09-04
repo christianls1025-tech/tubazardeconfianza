@@ -18,7 +18,21 @@ import {
    archivo no se ejecuta.
 ========================================== */
 
-const usuarioActual = await protegerPagina();
+let usuarioActual = null;
+
+try {
+    usuarioActual = await protegerPagina();
+} catch (error) {
+    console.error("Error al verificar sesión:", error);
+    document.body.innerHTML = `
+        <div style="padding: 40px; text-align: center; font-family: 'Poppins', sans-serif;">
+            <h1 style="color: #8e2855;">Error al verificar la sesión</h1>
+            <p style="color: #563546;">${error.message}</p>
+            <a href="login.html" style="color: #d63384; text-decoration: none;">Ir al login</a>
+        </div>
+    `;
+    throw error; // Detiene la ejecución
+}
 
 if (usuarioActual) {
 
