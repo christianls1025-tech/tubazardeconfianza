@@ -47,15 +47,31 @@
     >
 
     <style>
-
         body {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(160deg, #f9edf3 0%, #fff 55%);
-            font-family: 'Poppins', sans-serif;
             padding: 20px;
+            font-family: 'Poppins', sans-serif;
+
+            /* Imagen de fondo */
+            background-image: url("../img/fondo-boutique.svg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            /* Capa semi-transparente rosa para dar contraste */
+            position: relative;
+        }
+
+        /* Overlay rosa sobre la imagen */
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(249, 237, 243, 0.85), rgba(255, 255, 255, 0.75));
+            z-index: -1;
         }
 
         .login-tarjeta {
@@ -64,8 +80,10 @@
             background: #fff;
             border-radius: 18px;
             padding: 40px 32px;
-            box-shadow: 0 20px 60px rgba(142, 40, 85, 0.12);
+            box-shadow: 0 20px 60px rgba(142, 40, 85, 0.25);
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .login-marca {
@@ -155,7 +173,6 @@
         .login-volver:hover {
             color: #8e2855;
         }
-
     </style>
 
 </head>
