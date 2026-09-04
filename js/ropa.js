@@ -797,6 +797,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ==========================================
        MANEJAR COMPARTIR FOTO + "YO"
+       (mejorado para copiar imagen y texto)
     ========================================== */
 
     async function manejarCompartirFotoYo(imagenURL) {
@@ -807,25 +808,11 @@ document.addEventListener("DOMContentLoaded", () => {
             Swal = await cargarSweetAlert();
         } catch (e) {
             console.error("No se pudo cargar SweetAlert2", e);
-            // Si no se puede cargar, mostrar un alert simple y abrir grupo
-            alert("Se copió el mensaje 'Yo' y la imagen. Abre el grupo de WhatsApp y pega el mensaje con la foto.");
+            // Fallback simple
+            alert("No se pudo abrir el panel de compartir. Copia manualmente el texto 'Yo' y comparte la foto.");
             window.open(GRUPO_WHATSAPP, "_blank", "noopener");
             return;
         }
-
-        // Función auxiliar para mostrar SweetAlert y abrir grupo
-        const mostrarExitoYAbirGrupo = (mensaje) => {
-            Swal.fire({
-                icon: "success",
-                title: "¡Listo!",
-                text: mensaje || "Se ha copiado la información al portapapeles.",
-                confirmButtonText: "Abrir grupo",
-                confirmButtonColor: "#25d366",
-                preConfirm: () => {
-                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
-                }
-            });
-        };
 
         // 1. Intentar usar navigator.share (prioritario en móviles)
         if (navigator.share && navigator.canShare) {
@@ -843,8 +830,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         files: [archivoImagen],
                         text: "Yo"
                     });
-                    // Si el usuario completa el share, mostramos éxito
-                    mostrarExitoYAbirGrupo("¡Compartido exitosamente! Ahora abre el grupo de WhatsApp.");
+                    // El usuario completó el share, mostramos mensaje de éxito
+                    await Swal.fire({
+                        icon: "success",
+                        title: "¡Compartido!",
+                        text: "La imagen y el mensaje se compartieron correctamente.",
+                        confirmButtonText: "Abrir grupo",
+                        confirmButtonColor: "#25d366",
+                        preConfirm: () => {
+                            window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                        }
+                    });
                     return;
                 }
             } catch (error) {
@@ -860,32 +856,67 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const respuesta = await fetch(imagenURL);
             const blobImagen = await respuesta.blob();
-            // Intentar escribir con ClipboardItem
             const item = new ClipboardItem({
                 [blobImagen.type]: blobImagen,
                 "text/plain": new Blob(["Yo"], { type: "text/plain" })
             });
             await navigator.clipboard.write([item]);
-            mostrarExitoYAbirGrupo("La imagen y el texto 'Yo' se copiaron al portapapeles. Abre el grupo de WhatsApp y pega el contenido.");
-            return;
-        } catch (error) {
-            console.warn("Falló copiar imagen al portapapeles, copiamos solo texto:", error);
-        }
 
-        // 3. Fallback: copiar solo texto "Yo"
-        try {
-            await navigator.clipboard.writeText("Yo");
-            mostrarExitoYAbirGrupo("Se copió el texto 'Yo'. Guarda la imagen manualmente (usa el botón 'Abrir foto') y pégala en el grupo junto con el mensaje.");
-            return;
-        } catch (error) {
-            console.error("No se pudo copiar ni texto:", error);
-            Swal.fire({
-                icon: "error",
-                title: "No se pudo copiar",
-                text: "Copia manualmente el texto 'Yo' y comparte la foto en el grupo.",
+            // Éxito: mostrar SweetAlert y abrir grupo
+            await Swal.fire({
+                icon: "success",
+                title: "¡Imagen y texto copiados!",
+                text: "La foto y el mensaje 'Yo' están en tu portapapeles. Ve al grupo de WhatsApp y pégalos.",
                 confirmButtonText: "Abrir grupo",
                 confirmButtonColor: "#25d366",
                 preConfirm: () => {
+                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                }
+            });
+            return;
+
+        } catch (error) {
+            console.warn("Falló copiar imagen al portapapeles (ClipboardItem):", error);
+            // Fallback: copiar solo texto
+            try {
+                await navigator.clipboard.writeText("Yo");
+            } catch (e) {
+                console.error("No se pudo copiar ni el texto:", e);
+            }
+
+            // Mostrar SweetAlert con opciones para descargar/abrir la foto
+            await Swal.fire({
+                icon: "warning",
+                title: "No se pudo copiar la imagen",
+                text: "El texto 'Yo' se copió, pero la imagen no se pudo adjuntar. Puedes descargar la foto o abrirla para guardarla manualmente.",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "📥 Descargar imagen",
+                denyButtonText: "🖼️ Abrir foto",
+                cancelButtonText: "Abrir grupo",
+                reverseButtons: true,
+                confirmButtonColor: "#3085d6",
+                denyButtonColor: "#6c757d",
+                cancelButtonColor: "#25d366",
+                preConfirm: () => {
+                    // Descargar imagen
+                    const enlace = document.createElement("a");
+                    enlace.href = imagenURL;
+                    enlace.download = "prenda.jpg";
+                    document.body.appendChild(enlace);
+                    enlace.click();
+                    document.body.removeChild(enlace);
+                    // Después de descargar, abrir grupo
+                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                },
+                preDeny: () => {
+                    // Abrir foto en nueva pestaña
+                    window.open(imagenURL, "_blank", "noopener");
+                    // Luego abrir grupo
+                    window.open(GRUPO_WHATSAPP, "_blank", "noopener");
+                },
+                preCancel: () => {
+                    // Solo abrir grupo
                     window.open(GRUPO_WHATSAPP, "_blank", "noopener");
                 }
             });
