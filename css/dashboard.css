@@ -1,0 +1,572 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+
+    background: #fff7fa;
+
+    color: #563546;
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar-admin {
+    background: white;
+
+    padding: 14px 0;
+
+    box-shadow:
+        0 3px 20px rgba(100, 30, 65, 0.08);
+}
+
+.navbar-brand {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.9rem;
+
+    font-weight: 600;
+
+    line-height: 0.85;
+
+    color: #c52f76;
+
+    text-decoration: none;
+}
+
+.navbar-brand span {
+    display: block;
+
+    font-size: 1rem;
+
+    font-style: italic;
+
+    color: #704258;
+}
+
+.navbar-admin .nav-link {
+    color: #654252;
+
+    font-weight: 500;
+
+    margin-left: 15px;
+}
+
+.navbar-admin .nav-link:hover,
+.navbar-admin .nav-link.active {
+    color: #d63384;
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.dashboard-main {
+    padding: 65px 0 90px;
+}
+
+.dashboard-header {
+    margin-bottom: 40px;
+}
+
+.dashboard-header span {
+    color: #d63384;
+
+    font-size: 0.8rem;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+}
+
+.dashboard-header h1 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: clamp(3rem, 6vw, 4.5rem);
+
+    color: #54243b;
+
+    margin: 5px 0;
+}
+
+.dashboard-header p {
+    color: #806270;
+}
+
+
+/* =========================================
+   STAT CARDS
+========================================= */
+
+.stat-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    height: 100%;
+
+    box-shadow:
+        0 8px 30px rgba(100, 30, 65, 0.07);
+}
+
+.stat-icon {
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: #fde2ed;
+
+    color: #d63384;
+
+    font-size: 1.5rem;
+}
+
+.stat-card span {
+    display: block;
+
+    color: #806270;
+
+    font-size: 0.8rem;
+}
+
+.stat-card strong {
+    display: block;
+
+    color: #54243b;
+
+    font-size: 2rem;
+}
+
+
+/* =========================================
+   INFO
+========================================= */
+
+.info-card {
+    background: #54243b;
+
+    color: white;
+
+    border-radius: 18px;
+
+    padding: 30px;
+}
+
+.info-card span {
+    color: #f0b3cb;
+
+    font-size: 0.85rem;
+}
+
+.info-card strong {
+    display: block;
+
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 2.2rem;
+
+    margin: 5px 0;
+}
+
+.info-card p {
+    margin: 0;
+
+    color: #e2cbd5;
+
+    font-size: 0.85rem;
+}
+
+.categoria-estrella-valor {
+    font-size: 1.4rem !important;
+
+    line-height: 1.2;
+
+    word-break: break-word;
+}
+
+
+/* =========================================
+   CARDS
+========================================= */
+
+.dashboard-card {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 35px;
+
+    margin-bottom: 30px;
+
+    box-shadow:
+        0 8px 30px rgba(100, 30, 65, 0.07);
+}
+
+.card-title span {
+    color: #d63384;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+}
+
+.card-title h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    color: #54243b;
+
+    font-size: 2.3rem;
+
+    margin: 3px 0 25px;
+}
+
+
+/* =========================================
+   CATEGORÍAS
+========================================= */
+
+.categorias {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(180px, 1fr)
+        );
+
+    gap: 15px;
+}
+
+.categoria-item {
+    padding: 20px;
+
+    border-radius: 14px;
+
+    background: #fff6f9;
+
+    border: 1px solid #f1dce5;
+}
+
+.categoria-item span {
+    display: block;
+
+    color: #806270;
+
+    font-size: 0.85rem;
+}
+
+.categoria-item strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #54243b;
+
+    font-size: 1.7rem;
+}
+
+.categoria-precio-promedio {
+    display: block;
+
+    margin-top: 8px;
+
+    color: #9b4169;
+
+    font-size: 0.8rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   DISTRIBUCIÓN (GRÁFICA)
+========================================= */
+
+.distribucion-titulo {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 15px;
+}
+
+.grupo-tipo-grafica,
+.grupo-periodo-grafica {
+    display: inline-flex;
+
+    background: #fff6f9;
+
+    border: 1px solid #f1dce5;
+
+    border-radius: 30px;
+
+    padding: 4px;
+
+    gap: 4px;
+
+    flex-shrink: 0;
+}
+
+.btn-tipo-grafica,
+.btn-periodo-grafica {
+    border: none;
+
+    background: transparent;
+
+    color: #806270;
+
+    padding: 7px 16px;
+
+    border-radius: 30px;
+
+    font-size: 0.85rem;
+
+    font-weight: 600;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    transition: 0.25s;
+}
+
+.btn-tipo-grafica:hover,
+.btn-periodo-grafica:hover {
+    color: #d63384;
+}
+
+.btn-tipo-grafica.activo,
+.btn-periodo-grafica.activo {
+    background: #d63384;
+
+    color: #fff;
+}
+
+.distribucion-grafica-contenedor {
+    max-width: 420px;
+
+    margin: 10px auto 0;
+
+    position: relative;
+}
+
+.distribucion-grafica-contenedor canvas {
+    max-height: 320px;
+}
+
+
+/* =========================================
+   VENTAS POR PERIODO (GRÁFICA)
+========================================= */
+
+.ventas-grafica-contenedor {
+    margin-top: 10px;
+
+    position: relative;
+}
+
+.ventas-grafica-contenedor canvas {
+    max-height: 340px;
+}
+
+
+/* =========================================
+   LEYENDA
+========================================= */
+
+.leyenda {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 25px;
+
+    margin-top: 20px;
+
+    color: #705361;
+
+    font-size: 0.85rem;
+}
+
+.leyenda span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.punto {
+    width: 11px;
+
+    height: 11px;
+
+    border-radius: 50%;
+}
+
+.punto.disponible {
+    background: #d63384;
+}
+
+.punto.apartado {
+    background: #f0b429;
+}
+
+.punto.comprado {
+    background: #777;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .navbar-admin .nav-link {
+        margin-left: 0;
+    }
+
+    .dashboard-main {
+        padding: 45px 0 60px;
+    }
+
+    .dashboard-card {
+        padding: 25px 20px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .dashboard-header h1 {
+        font-size: 3rem;
+    }
+
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer-panel {
+    background: #421c2e;
+
+    color: #d9bdca;
+
+    padding: 30px 0;
+
+    margin-top: 60px;
+}
+
+.footer-panel .container {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+.footer-panel-marca {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.4rem;
+
+    font-weight: 600;
+
+    color: #ffffff;
+
+    line-height: 1;
+}
+
+.footer-panel-marca span {
+    display: block;
+
+    font-size: 0.95rem;
+
+    color: #f0a8c6;
+}
+
+.footer-panel-links {
+    display: flex;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.footer-panel-links a {
+    color: #d9bdca;
+
+    text-decoration: none;
+
+    font-size: 0.9rem;
+
+    transition: color 0.2s ease;
+}
+
+.footer-panel-links a:hover {
+    color: #f0a8c6;
+}
+
+.footer-panel-copy {
+    margin: 0;
+
+    font-size: 0.85rem;
+
+    color: #a988a0;
+
+    width: 100%;
+
+    text-align: center;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #71475a;
+}
+
+@media (max-width: 576px) {
+
+    .footer-panel .container {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}

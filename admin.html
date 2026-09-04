@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Administración | Tu Bazar de Confianza</title>
+
+    <meta
+        name="description"
+        content="Administración de prendas de Tu Bazar de Confianza."
+    >
+
+    <!-- Icono de pestaña -->
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/admin.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     NAVBAR
+================================================== -->
+
+<nav class="navbar navbar-expand-lg navbar-admin">
+
+    <div class="container">
+
+        <a
+            href="index.html"
+            class="navbar-brand"
+        >
+            Tu Bazar
+            <span>de Confianza</span>
+        </a>
+
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#menuAdmin"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div
+            class="collapse navbar-collapse"
+            id="menuAdmin"
+        >
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+
+                    <a
+                        href="ropa.html"
+                        class="nav-link"
+                    >
+                        <i class="bi bi-shop"></i>
+                        Ver tienda
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a
+                        href="admin.html"
+                        class="nav-link active"
+                    >
+                        <i class="bi bi-box-seam"></i>
+                        Administrar
+                    </a>
+
+                </li>
+
+
+                <li class="nav-item">
+
+                    <a
+                        href="dashboard.html"
+                        class="nav-link"
+                    >
+                        <i class="bi bi-bar-chart-line"></i>
+                        Dashboard
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- ==================================================
+     CONTENIDO
+================================================== -->
+
+<main class="admin-main">
+
+    <div class="container">
+
+
+        <!-- Encabezado -->
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="titulo-pequeno">
+                    Administración
+                </span>
+
+                <h1>
+                    Gestión de prendas
+                </h1>
+
+                <p>
+                    Agrega, modifica y administra las prendas
+                    disponibles en Tu Bazar de Confianza.
+                </p>
+
+            </div>
+
+
+            <a
+                href="dashboard.html"
+                class="btn-dashboard"
+            >
+                <i class="bi bi-bar-chart-line"></i>
+                Ver estadísticas
+            </a>
+
+        </div>
+
+
+
+        <!-- ==================================================
+             FORMULARIO
+        ================================================== -->
+
+        <section class="admin-card">
+
+            <div class="admin-card-header">
+
+                <div>
+
+                    <h2 id="tituloFormulario">
+                        Agregar nueva prenda
+                    </h2>
+
+                    <p>
+                        Completa la información de la prenda.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <form
+                id="formProducto"
+                enctype="multipart/form-data"
+            >
+
+                <!-- ID oculto para edición -->
+
+                <input
+                    type="hidden"
+                    id="productoId"
+                >
+
+
+                <div class="row g-4">
+
+
+                    <!-- FOTO -->
+
+                    <div class="col-lg-5">
+
+                        <label
+                            for="foto"
+                            class="form-label"
+                        >
+                            Fotografía de la prenda
+                        </label>
+
+
+                        <div
+                            class="zona-imagen"
+                            id="zonaImagen"
+                        >
+
+                            <i class="bi bi-cloud-arrow-up"></i>
+
+                            <p>
+                                Selecciona una imagen
+                            </p>
+
+                            <span>
+                                JPG, JPEG, PNG o WEBP
+                            </span>
+
+                            <input
+                                type="file"
+                                id="foto"
+                                name="foto"
+                                accept="image/jpeg,image/png,image/webp"
+                            >
+
+                        </div>
+
+
+                        <!-- Vista previa -->
+
+                        <div
+                            id="previewContainer"
+                            class="preview-container d-none"
+                        >
+
+                            <img
+                                id="previewImagen"
+                                src=""
+                                alt="Vista previa"
+                            >
+
+                            <button
+                                type="button"
+                                id="quitarImagen"
+                                class="btn-quitar-imagen"
+                            >
+                                <i class="bi bi-x"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- INFORMACIÓN -->
+
+                    <div class="col-lg-7">
+
+
+                        <!-- DESCRIPCIÓN -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="descripcion"
+                                class="form-label"
+                            >
+                                Descripción
+                            </label>
+
+                            <textarea
+                                id="descripcion"
+                                name="descripcion"
+                                class="form-control"
+                                rows="6"
+                                maxlength="5000"
+                                placeholder="Ejemplo: 💚 Top corto sin mangas verde salvia, punto canelado elástico, corte crop. Marca Pull & Bear. Excelente estado 🌿"
+                                required
+                            ></textarea>
+
+                            <div class="contador">
+                                <span id="contadorCaracteres">
+                                    0
+                                </span>
+                                / 5000
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PRECIO -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="precio"
+                                class="form-label"
+                            >
+                                Precio
+                            </label>
+
+                            <div class="input-precio">
+
+                                <span>
+                                    $
+                                </span>
+
+                                <input
+                                    type="number"
+                                    id="precio"
+                                    name="precio"
+                                    class="form-control"
+                                    min="0"
+                                    max="99999999"
+                                    step="0.01"
+                                    placeholder="0.00"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- CATEGORÍA -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="categoria"
+                                class="form-label"
+                            >
+                                Categoría
+                            </label>
+
+                            <input
+                                type="text"
+                                id="categoria"
+                                name="categoria"
+                                class="form-control"
+                                maxlength="100"
+                                placeholder="Ejemplo: Tops"
+                                required
+                            >
+
+                        </div>
+
+
+
+                        <!-- ESTADO -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="estado"
+                                class="form-label"
+                            >
+                                Estado
+                            </label>
+
+                            <select
+                                id="estado"
+                                name="estado"
+                                class="form-select"
+                                required
+                            >
+
+                                <option value="disponible">
+                                    Disponible
+                                </option>
+
+                                <option value="apartado">
+                                    Apartado
+                                </option>
+
+                                <option value="comprado">
+                                    Comprado
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BOTONES -->
+
+                <div class="acciones-formulario">
+
+                    <button
+                        type="button"
+                        id="btnCancelar"
+                        class="btn-cancelar d-none"
+                    >
+                        Cancelar
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="btnGuardar"
+                        class="btn-guardar"
+                    >
+                        <i class="bi bi-plus-circle"></i>
+
+                        Guardar prenda
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             LISTADO
+        ================================================== -->
+
+        <section class="admin-card">
+
+            <div class="admin-card-header">
+
+                <div>
+
+                    <h2>
+                        Prendas registradas
+                    </h2>
+
+                    <p>
+                        Administra las prendas actualmente registradas.
+                    </p>
+
+                </div>
+
+                <span
+                    id="totalProductos"
+                    class="contador-productos"
+                >
+                    0 prendas
+                </span>
+
+            </div>
+
+
+            <!-- Filtros de la tabla -->
+
+            <div
+                class="filtros-tabla"
+                id="filtrosTabla"
+            >
+
+                <div class="filtro-busqueda">
+
+                    <i class="bi bi-search"></i>
+
+                    <input
+                        type="text"
+                        id="buscarProducto"
+                        class="form-control"
+                        placeholder="Buscar por descripción o categoría..."
+                    >
+
+                </div>
+
+                <select
+                    id="filtroEstado"
+                    class="form-select filtro-estado-select"
+                >
+
+                    <option value="todos">
+                        Todos los estados
+                    </option>
+
+                    <option value="disponible">
+                        Disponible
+                    </option>
+
+                    <option value="apartado">
+                        Apartado
+                    </option>
+
+                    <option value="comprado">
+                        Comprado
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Loader -->
+
+            <div
+                id="loaderAdmin"
+                class="loader-admin"
+            >
+
+                <div class="spinner-border"></div>
+
+                <p>
+                    Cargando prendas...
+                </p>
+
+            </div>
+
+
+            <!-- Tabla -->
+
+            <div
+                class="table-responsive"
+                id="tablaContainer"
+            >
+
+                <table class="table tabla-productos">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Foto
+                            </th>
+
+                            <th>
+                                Descripción
+                            </th>
+
+                            <th>
+                                Precio
+                            </th>
+
+                            <th>
+                                Categoría
+                            </th>
+
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th>
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tablaProductos">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- Paginación -->
+
+            <nav
+                id="paginacionContenedor"
+                aria-label="Paginación de prendas registradas"
+            >
+
+                <ul
+                    class="pagination justify-content-center"
+                    id="paginacionProductos"
+                >
+
+                </ul>
+
+            </nav>
+
+
+            <!-- Sin productos -->
+
+            <div
+                id="sinProductos"
+                class="sin-productos d-none"
+            >
+
+                <i class="bi bi-bag-x"></i>
+
+                <h3>
+                    Todavía no hay prendas
+                </h3>
+
+                <p>
+                    Agrega la primera prenda utilizando el formulario.
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+
+<!-- ==================================================
+     FOOTER
+================================================== -->
+
+<footer class="footer-panel">
+
+    <div class="container">
+
+        <div class="footer-panel-marca">
+
+            Tu Bazar
+            <span>de Confianza</span>
+
+        </div>
+
+        <nav class="footer-panel-links">
+
+            <a href="ropa.html">Ver tienda</a>
+            <a href="admin.html">Administrar</a>
+            <a href="dashboard.html">Dashboard</a>
+
+        </nav>
+
+        <p class="footer-panel-copy">
+            © <span id="anioActual">2026</span> Tu Bazar de Confianza. Panel de administración.
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<!-- ==================================================
+     MODAL CONFIRMACIÓN ELIMINAR
+================================================== -->
+
+<div
+    class="modal fade"
+    id="modalEliminar"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Eliminar prenda
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    ¿Estás seguro de que deseas eliminar esta prenda?
+                </p>
+
+                <p class="text-muted">
+                    Esta acción no se puede deshacer.
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    id="btnConfirmarEliminar"
+                    class="btn btn-danger"
+                >
+                    Eliminar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Toast -->
+
+<div
+    class="toast-container position-fixed bottom-0 end-0 p-3"
+>
+
+    <div
+        id="toastAdmin"
+        class="toast"
+        role="alert"
+    >
+
+        <div class="toast-header">
+
+            <strong class="me-auto">
+                Tu Bazar de Confianza
+            </strong>
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="toast"
+            ></button>
+
+        </div>
+
+        <div
+            class="toast-body"
+            id="toastMensaje"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- Bootstrap -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- JS -->
+
+<script type="module" src="js/admin.js"></script>
+
+
+<!-- Año dinámico del footer -->
+
+<script>
+    document.getElementById("anioActual").textContent =
+        new Date().getFullYear();
+</script>
+
+</body>
+
+</html>

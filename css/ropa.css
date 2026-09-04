@@ -1,0 +1,1261 @@
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar-bazar {
+    background: rgba(255, 255, 255, 0.97);
+
+    box-shadow:
+        0 3px 20px rgba(120, 30, 70, 0.08);
+
+    padding: 14px 0;
+
+    z-index: 1000;
+}
+
+.navbar-brand {
+    display: flex;
+    flex-direction: column;
+
+    line-height: 0.9;
+
+    text-decoration: none;
+}
+
+.brand-principal {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.9rem;
+
+    font-weight: 600;
+
+    color: #b52f6d;
+}
+
+.brand-secundario {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1rem;
+
+    font-style: italic;
+
+    color: #7a3d59;
+}
+
+.navbar-bazar .nav-link {
+    color: #5f3949;
+
+    font-weight: 500;
+
+    margin-left: 18px;
+
+    transition: 0.3s;
+}
+
+.navbar-bazar .nav-link:hover,
+.navbar-bazar .nav-link.active {
+    color: #d63384;
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.ropa-hero {
+    position: relative;
+
+    min-height: 500px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background-image:
+        url("../img/fondo-boutique.svg");
+
+    background-size: cover;
+
+    background-position: center;
+}
+
+.ropa-hero-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(100, 20, 60, 0.65),
+            rgba(214, 51, 132, 0.35)
+        );
+}
+
+.ropa-hero-content {
+    position: relative;
+
+    z-index: 2;
+
+    text-align: center;
+
+    color: white;
+}
+
+.ropa-hero-eyebrow {
+    font-size: 0.95rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 3px;
+
+    margin-bottom: 15px;
+}
+
+.ropa-hero h1 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: clamp(3.5rem, 8vw, 6rem);
+
+    line-height: 0.9;
+
+    margin-bottom: 20px;
+}
+
+.ropa-hero-content > p:last-of-type {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.7rem;
+
+    font-style: italic;
+
+    margin-bottom: 30px;
+}
+
+
+/* =========================================
+   BOTONES ROSAS
+========================================= */
+
+.btn-rosa {
+    background: #d63384;
+
+    border: 2px solid #d63384;
+
+    color: white;
+
+    border-radius: 30px;
+
+    padding: 11px 28px;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+.btn-rosa:hover {
+    background: white;
+
+    border-color: white;
+
+    color: #d63384;
+}
+
+
+/* =========================================
+   NOSOTROS
+========================================= */
+
+.seccion-nosotros {
+    padding: 90px 0;
+
+    background: #fff8fb;
+}
+
+.titulo-pequeno {
+    display: block;
+
+    color: #d63384;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+    font-size: 0.85rem;
+
+    font-weight: 600;
+
+    margin-bottom: 10px;
+}
+
+.seccion-nosotros h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    color: #54243b;
+
+    font-size: clamp(2.5rem, 5vw, 4rem);
+
+    line-height: 1;
+
+    margin-bottom: 25px;
+}
+
+.seccion-nosotros h2 em {
+    color: #d63384;
+}
+
+.seccion-nosotros p {
+    color: #684b58;
+
+    line-height: 1.8;
+}
+
+.info-bazar {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin-top: 25px;
+}
+
+.info-bazar div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    color: #63374c;
+}
+
+.info-bazar i {
+    color: #d63384;
+
+    font-size: 1.2rem;
+}
+
+
+/* =========================================
+   TARJETA DINÁMICA
+========================================= */
+
+.tarjeta-dinamica {
+    background: white;
+
+    border-radius: 25px;
+
+    padding: 45px;
+
+    text-align: center;
+
+    box-shadow:
+        0 15px 45px rgba(140, 40, 85, 0.12);
+}
+
+.icono-dinamica {
+    width: 75px;
+
+    height: 75px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #fde3ef;
+
+    color: #d63384;
+
+    font-size: 2rem;
+
+    overflow: hidden;
+}
+
+.icono-dinamica img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.tarjeta-dinamica h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 2.3rem;
+
+    color: #54243b;
+}
+
+.tarjeta-dinamica p {
+    color: #765866;
+
+    line-height: 1.7;
+}
+
+.btn-dinamica {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    background: #d63384;
+
+    color: white;
+
+    border-radius: 30px;
+
+    padding: 10px 20px;
+
+    border: none;
+}
+
+.btn-dinamica:hover {
+    background: #b52f6d;
+
+    color: white;
+}
+
+.btn-dinamica span {
+    display: inline-flex;
+
+    width: 25px;
+
+    height: 25px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: white;
+
+    color: #d63384;
+
+    border-radius: 50%;
+
+    font-weight: bold;
+}
+
+
+/* =========================================
+   SECCIÓN ROPA
+========================================= */
+
+.seccion-ropa {
+    padding: 90px 0;
+
+    background: white;
+}
+
+.encabezado-ropa {
+    margin-bottom: 40px;
+}
+
+.encabezado-ropa h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    color: #54243b;
+
+    font-size: clamp(2.5rem, 5vw, 4rem);
+
+    margin-bottom: 10px;
+}
+
+.encabezado-ropa p {
+    color: #765866;
+}
+
+
+/* =========================================
+   PREGUNTAS FRECUENTES
+========================================= */
+
+.seccion-faq {
+    padding: 90px 0;
+
+    background: #fff8fb;
+}
+
+.acordeon-faq .accordion-item {
+    border: none;
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    height: 100%;
+
+    box-shadow:
+        0 8px 25px rgba(100, 30, 65, 0.08);
+}
+
+.acordeon-faq .accordion-button {
+    font-family: "Poppins", sans-serif;
+
+    font-weight: 600;
+
+    color: #54243b;
+
+    background: white;
+
+    padding: 20px 24px;
+}
+
+.acordeon-faq .accordion-button:not(.collapsed) {
+    color: #d63384;
+
+    background: #fde3ef;
+
+    box-shadow: none;
+}
+
+.acordeon-faq .accordion-button:focus {
+    box-shadow:
+        0 0 0 3px rgba(214, 51, 132, 0.15);
+}
+
+.acordeon-faq .accordion-button::after {
+    filter: hue-rotate(300deg) saturate(3.5);
+}
+
+.acordeon-faq .accordion-body {
+    color: #684b58;
+
+    line-height: 1.8;
+
+    padding: 4px 24px 22px;
+}
+
+
+/* =========================================
+   FILTROS
+========================================= */
+
+.filtros-estados {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.filtros-categorias {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 45px;
+}
+
+.btn-filtro {
+    border: 1px solid #e5a7c4;
+
+    background: white;
+
+    color: #9b4169;
+
+    border-radius: 25px;
+
+    padding: 8px 20px;
+
+    transition: 0.3s;
+}
+
+.btn-filtro:hover,
+.btn-filtro.activo {
+    background: #d63384;
+
+    color: white;
+
+    border-color: #d63384;
+}
+
+
+/* =========================================
+   TARJETAS DE ROPA
+========================================= */
+
+.tarjeta-ropa {
+    height: 100%;
+
+    overflow: hidden;
+
+    border: none;
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 30px rgba(100, 30, 65, 0.10);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.tarjeta-ropa:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+        0 15px 40px rgba(100, 30, 65, 0.16);
+}
+
+
+/* Imagen */
+
+.ropa-imagen-contenedor {
+    position: relative;
+
+    height: 390px;
+
+    background: #f9edf3;
+
+    overflow: hidden;
+}
+
+.ropa-imagen {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 0.5s ease;
+}
+
+.tarjeta-ropa:hover .ropa-imagen {
+    transform: scale(1.04);
+}
+
+
+/* Estado */
+
+.estado-prenda {
+    position: absolute;
+
+    top: 15px;
+
+    left: 15px;
+
+    padding: 6px 13px;
+
+    border-radius: 20px;
+
+    font-size: 0.75rem;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.estado-disponible {
+    background: #d63384;
+
+    color: white;
+}
+
+.estado-apartado {
+    background: #ffc107;
+
+    color: #553e00;
+}
+
+.estado-comprado {
+    background: #6c757d;
+
+    color: white;
+}
+
+
+/* Precio y WhatsApp (sobre la imagen) */
+
+.ropa-superior-derecha {
+    position: absolute;
+
+    top: 15px;
+
+    right: 15px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 8px;
+
+    max-width: 60%;
+}
+
+.precio-overlay {
+    background: rgba(255, 255, 255, 0.95);
+
+    color: #54243b;
+
+    padding: 6px 13px;
+
+    border-radius: 20px;
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 12px rgba(84, 36, 59, 0.18);
+
+    white-space: nowrap;
+}
+
+.btn-whatsapp-overlay {
+    width: auto;
+
+    margin-bottom: 0;
+
+    padding: 6px 14px;
+
+    border-radius: 20px;
+
+    font-size: 0.8rem;
+
+    box-shadow:
+        0 4px 12px rgba(37, 211, 102, 0.35);
+}
+
+
+/* Botón "Yo" (esquina inferior izquierda de la imagen) */
+
+.ropa-inferior-izquierda {
+    position: absolute;
+
+    bottom: 15px;
+
+    left: 15px;
+}
+
+
+/* Información */
+
+.ropa-info {
+    padding: 22px;
+}
+
+.ropa-categoria {
+    color: #d63384;
+
+    font-size: 0.78rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+
+    font-weight: 600;
+}
+
+.ropa-descripcion {
+    color: #59404c;
+
+    line-height: 1.6;
+
+    white-space: pre-line;
+
+    margin: 8px 0 6px;
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+
+    -webkit-line-clamp: 3;
+
+    overflow: hidden;
+}
+
+.btn-ver-mas {
+    display: inline-block;
+
+    background: none;
+
+    border: none;
+
+    padding: 0 0 14px;
+
+    color: #d63384;
+
+    font-weight: 600;
+
+    font-size: 0.85rem;
+
+    text-decoration: underline;
+
+    cursor: pointer;
+}
+
+.btn-ver-mas:hover {
+    color: #a61e5a;
+}
+
+
+/* =========================================
+   BOTÓN "VER MÁS" DEL CATÁLOGO
+========================================= */
+
+.btn-ver-mas-catalogo {
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 340px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    background: #fff6fa;
+
+    border: 2px dashed #e5a7c4;
+
+    border-radius: 18px;
+
+    color: #d63384;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.btn-ver-mas-catalogo i {
+    font-size: 2rem;
+}
+
+.btn-ver-mas-catalogo:hover {
+    background: #fde3ef;
+
+    border-color: #d63384;
+
+    transform: translateY(-5px);
+}
+
+
+/* =========================================
+   MODAL DESCRIPCIÓN
+========================================= */
+
+.modal-descripcion-imagen {
+    width: 100%;
+
+    max-height: 480px;
+
+    object-fit: contain;
+
+    background: #f9edf3;
+
+    border-radius: 14px;
+
+    margin-bottom: 18px;
+}
+
+.modal-descripcion-texto {
+    color: #59404c;
+
+    line-height: 1.7;
+
+    white-space: pre-line;
+}
+
+.modal-descripcion-precio {
+    font-size: 1.4rem;
+
+    font-weight: 600;
+
+    color: #54243b;
+
+    margin: 12px 0 18px;
+}
+
+.modal-descripcion-estado-info {
+    color: #806270;
+
+    font-weight: 600;
+
+    background: #fff6f9;
+
+    border: 1px solid #f1dce5;
+
+    border-radius: 10px;
+
+    padding: 12px 15px;
+
+    margin: 0;
+}
+
+.ropa-precio {
+    font-size: 1.5rem;
+
+    font-weight: 600;
+
+    color: #54243b;
+
+    margin: 6px 0 15px;
+}
+
+
+/* =========================================
+   WHATSAPP
+========================================= */
+
+.btn-whatsapp {
+    width: 100%;
+
+    background: #25d366;
+
+    border: none;
+
+    color: white;
+
+    border-radius: 10px;
+
+    padding: 11px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    transition: 0.3s;
+}
+
+.btn-whatsapp:hover {
+    background: #1ebe5d;
+
+    color: white;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   LOADER
+========================================= */
+
+.loader-ropa {
+    text-align: center;
+
+    padding: 50px;
+
+    color: #d63384;
+}
+
+.loader-ropa p {
+    margin-top: 10px;
+}
+
+
+/* =========================================
+   SIN ROPA
+========================================= */
+
+.sin-ropa {
+    text-align: center;
+
+    padding: 60px 20px;
+
+    color: #765866;
+}
+
+.sin-ropa i {
+    font-size: 4rem;
+
+    color: #d63384;
+}
+
+.sin-ropa h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 2rem;
+
+    margin-top: 15px;
+
+    color: #54243b;
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+.modal-dinamica {
+    border: none;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.modal-dinamica .modal-header {
+    background: #d63384;
+
+    color: white;
+
+    border: none;
+}
+
+.modal-dinamica .modal-title {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.8rem;
+}
+
+.modal-dinamica .modal-body {
+    padding: 30px;
+
+    color: #5f4752;
+
+    line-height: 1.7;
+}
+
+.modal-dinamica h3 {
+    color: #b52f6d;
+
+    font-size: 1.15rem;
+
+    margin-top: 25px;
+
+    margin-bottom: 15px;
+}
+
+.introduccion-dinamica {
+    font-size: 1rem;
+
+    margin-bottom: 25px;
+}
+
+.paso-dinamica {
+    background: #fff5f9;
+
+    border-left: 4px solid #d63384;
+
+    padding: 15px 18px;
+
+    margin-bottom: 12px;
+
+    border-radius: 0 10px 10px 0;
+}
+
+.paso-dinamica strong {
+    color: #8e2855;
+}
+
+.paso-dinamica p {
+    margin: 5px 0 0;
+}
+
+.lista-dinamica {
+    padding-left: 25px;
+}
+
+.lista-dinamica li {
+    margin-bottom: 8px;
+}
+
+.alerta-dinamica {
+    margin-top: 25px;
+
+    padding: 20px;
+
+    background: #fff0f5;
+
+    border-radius: 15px;
+}
+
+.alerta-dinamica h3 {
+    margin-top: 0;
+}
+
+.gracias-dinamica {
+    text-align: center;
+
+    font-weight: 600;
+
+    color: #d63384;
+
+    margin-top: 25px;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer-bazar {
+    background: #421c2e;
+
+    color: #fbeaf1;
+
+    padding: 70px 0 25px;
+}
+
+.footer-bazar h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 2.3rem;
+
+    margin-bottom: 15px;
+}
+
+.footer-bazar h3 span {
+    display: block;
+
+    font-style: italic;
+
+    color: #f0a8c6;
+}
+
+.footer-bazar h4 {
+    font-size: 1.1rem;
+
+    margin-bottom: 20px;
+
+    color: white;
+}
+
+.footer-bazar p {
+    color: #d9bdca;
+
+    line-height: 1.7;
+}
+
+.footer-lista {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+}
+
+.footer-lista li {
+    display: flex;
+
+    gap: 12px;
+
+    margin-bottom: 12px;
+
+    color: #d9bdca;
+}
+
+.footer-lista i {
+    color: #f0a8c6;
+}
+
+.footer-redes {
+    display: flex;
+
+    gap: 10px;
+}
+
+.footer-redes a {
+    width: 42px;
+
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: white;
+
+    border: 1px solid #a66a84;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+.footer-redes a:hover {
+    background: #d63384;
+
+    border-color: #d63384;
+
+    transform: translateY(-3px);
+}
+
+.footer-bazar hr {
+    border-color: #71475a;
+
+    margin: 45px 0 20px;
+}
+
+.footer-bottom {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+
+    font-size: 0.85rem;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .navbar-bazar .nav-link {
+        margin-left: 0;
+
+        padding: 10px 0;
+    }
+
+    .ropa-hero {
+        min-height: 550px;
+    }
+
+    .seccion-nosotros,
+    .seccion-ropa {
+        padding: 60px 0;
+    }
+
+    .tarjeta-dinamica {
+        padding: 30px 20px;
+    }
+
+    .ropa-imagen-contenedor {
+        height: auto;
+    }
+
+    .ropa-imagen {
+        height: auto;
+
+        object-fit: contain;
+
+        display: block;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .ropa-hero h1 {
+        font-size: 3.2rem;
+    }
+
+    .ropa-hero-eyebrow {
+        font-size: 0.7rem;
+
+        letter-spacing: 1.5px;
+    }
+
+    .ropa-hero-content > p:last-of-type {
+        font-size: 1.3rem;
+    }
+
+    .modal-dinamica .modal-body {
+        padding: 20px;
+    }
+
+}
+
+/* =========================================
+   AVISO: MENSAJE COPIADO
+========================================= */
+
+.aviso-copiado {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 30px;
+
+    transform: translate(-50%, 20px);
+
+    background: #421c2e;
+
+    color: #ffffff;
+
+    padding: 14px 22px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(66, 28, 46, 0.35);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    max-width: 90%;
+
+    font-size: 0.95rem;
+
+    z-index: 2000;
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    pointer-events: none;
+}
+
+.aviso-copiado.visible {
+    opacity: 1;
+
+    transform: translate(-50%, 0);
+}
+
+.aviso-copiado i {
+    color: #25d366;
+
+    font-size: 1.2rem;
+
+    flex-shrink: 0;
+}

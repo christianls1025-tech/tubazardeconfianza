@@ -1,0 +1,875 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+
+    font-family: "Poppins", sans-serif;
+
+    background: #fff7fa;
+
+    color: #563546;
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar-admin {
+    background: white;
+
+    padding: 14px 0;
+
+    box-shadow:
+        0 3px 20px rgba(100, 30, 65, 0.08);
+}
+
+.navbar-brand {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.9rem;
+
+    font-weight: 600;
+
+    line-height: 0.85;
+
+    color: #c52f76;
+
+    text-decoration: none;
+}
+
+.navbar-brand span {
+    display: block;
+
+    font-size: 1rem;
+
+    font-style: italic;
+
+    color: #704258;
+}
+
+.navbar-admin .nav-link {
+    color: #654252;
+
+    font-weight: 500;
+
+    margin-left: 15px;
+}
+
+.navbar-admin .nav-link:hover,
+.navbar-admin .nav-link.active {
+    color: #d63384;
+}
+
+
+/* =========================================
+   CONTENIDO
+========================================= */
+
+.admin-main {
+    padding: 60px 0 90px;
+}
+
+.admin-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+
+    margin-bottom: 35px;
+}
+
+.titulo-pequeno {
+    color: #d63384;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+    font-size: 0.8rem;
+
+    font-weight: 600;
+}
+
+.admin-header h1 {
+    font-family: "Cormorant Garamond", serif;
+
+    color: #54243b;
+
+    font-size: clamp(2.8rem, 5vw, 4rem);
+
+    margin: 5px 0;
+}
+
+.admin-header p {
+    color: #765866;
+
+    margin: 0;
+}
+
+.btn-dashboard {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 11px 20px;
+
+    border-radius: 30px;
+
+    color: white;
+
+    background: #d63384;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition: 0.3s;
+}
+
+.btn-dashboard:hover {
+    color: white;
+
+    background: #b52f6d;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   CARD
+========================================= */
+
+.admin-card {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 35px;
+
+    margin-bottom: 30px;
+
+    box-shadow:
+        0 8px 35px rgba(100, 30, 65, 0.08);
+}
+
+.admin-card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+}
+
+.admin-card-header h2 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 2rem;
+
+    color: #54243b;
+
+    margin: 0;
+}
+
+.admin-card-header p {
+    color: #806270;
+
+    margin: 5px 0 0;
+}
+
+.contador-productos {
+    padding: 7px 14px;
+
+    border-radius: 20px;
+
+    background: #fde5ef;
+
+    color: #b52f6d;
+
+    font-size: 0.85rem;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.form-label {
+    font-weight: 600;
+
+    color: #603b4c;
+
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #e5c3d1;
+
+    border-radius: 10px;
+
+    padding: 11px 13px;
+
+    color: #563546;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #d63384;
+
+    box-shadow:
+        0 0 0 0.2rem rgba(214, 51, 132, 0.12);
+}
+
+textarea.form-control {
+    resize: vertical;
+}
+
+.contador {
+    text-align: right;
+
+    font-size: 0.75rem;
+
+    color: #9a7a88;
+
+    margin-top: 5px;
+}
+
+
+/* =========================================
+   PRECIO
+========================================= */
+
+.input-precio {
+    display: flex;
+
+    align-items: center;
+
+    border: 1px solid #e5c3d1;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.input-precio span {
+    padding-left: 14px;
+
+    color: #d63384;
+
+    font-weight: 600;
+}
+
+.input-precio input {
+    border: none;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================
+   SUBIR IMAGEN
+========================================= */
+
+.zona-imagen {
+    position: relative;
+
+    height: 350px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    border: 2px dashed #dda5be;
+
+    border-radius: 18px;
+
+    background: #fff8fb;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition: 0.3s;
+}
+
+.zona-imagen:hover {
+    border-color: #d63384;
+
+    background: #fff1f7;
+}
+
+.zona-imagen i {
+    font-size: 3rem;
+
+    color: #d63384;
+
+    margin-bottom: 10px;
+}
+
+.zona-imagen p {
+    margin: 0;
+
+    font-weight: 600;
+
+    color: #603b4c;
+}
+
+.zona-imagen span {
+    font-size: 0.8rem;
+
+    color: #997584;
+
+    margin-top: 5px;
+}
+
+.zona-imagen input {
+    position: absolute;
+
+    inset: 0;
+
+    opacity: 0;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   PREVIEW
+========================================= */
+
+.preview-container {
+    position: relative;
+
+    height: 350px;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    background: #f9edf3;
+}
+
+.preview-container img {
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.btn-quitar-imagen {
+    position: absolute;
+
+    top: 12px;
+
+    right: 12px;
+
+    width: 38px;
+
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 50%;
+
+    color: white;
+
+    background: rgba(80, 20, 45, 0.75);
+
+    font-size: 1.1rem;
+}
+
+
+/* =========================================
+   BOTONES FORMULARIO
+========================================= */
+
+.acciones-formulario {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin-top: 30px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid #f0dce5;
+}
+
+.btn-guardar {
+    border: none;
+
+    border-radius: 30px;
+
+    padding: 11px 25px;
+
+    background: #d63384;
+
+    color: white;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+}
+
+.btn-guardar:hover {
+    background: #b52f6d;
+}
+
+.btn-cancelar {
+    border: 1px solid #d0adbD;
+
+    border-radius: 30px;
+
+    padding: 10px 22px;
+
+    background: white;
+
+    color: #704258;
+}
+
+
+/* =========================================
+   FILTROS DE TABLA
+========================================= */
+
+.filtros-tabla {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.filtro-busqueda {
+    position: relative;
+
+    flex: 1 1 260px;
+}
+
+.filtro-busqueda i {
+    position: absolute;
+
+    top: 50%;
+
+    left: 14px;
+
+    transform: translateY(-50%);
+
+    color: #b785a0;
+}
+
+.filtro-busqueda input {
+    padding-left: 38px;
+}
+
+.filtro-estado-select {
+    flex: 0 1 200px;
+}
+
+
+/* =========================================
+   TABLA
+========================================= */
+
+.tabla-productos {
+    vertical-align: middle;
+
+    margin: 0;
+}
+
+.tabla-productos thead th {
+    color: #75465b;
+
+    background: #fff6f9;
+
+    border-bottom: 2px solid #f0dce5;
+
+    font-size: 0.85rem;
+
+    white-space: nowrap;
+}
+
+.tabla-productos tbody td {
+    color: #634653;
+
+    border-color: #f3e3ea;
+}
+
+.tabla-imagen {
+    width: 65px;
+
+    height: 80px;
+
+    object-fit: cover;
+
+    border-radius: 8px;
+}
+
+
+/* =========================================
+   PAGINACIÓN
+========================================= */
+
+#paginacionContenedor {
+    margin-top: 25px;
+}
+
+.pagination .page-link {
+    color: #a6415f;
+
+    border-color: #f0dce5;
+}
+
+.pagination .page-link:hover {
+    color: #d63384;
+
+    background-color: #fff6f9;
+
+    border-color: #f0dce5;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #d63384;
+
+    border-color: #d63384;
+
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #c3aab5;
+
+    background-color: #fff;
+
+    border-color: #f0dce5;
+}
+
+.descripcion-tabla {
+    max-width: 300px;
+
+    white-space: pre-line;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 3;
+
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+
+/* =========================================
+   ESTADOS
+========================================= */
+
+.estado {
+    display: inline-block;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    font-size: 0.72rem;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.estado-disponible {
+    color: #8c2454;
+
+    background: #f9d9e7;
+}
+
+.estado-apartado {
+    color: #745700;
+
+    background: #fff0bd;
+}
+
+.estado-comprado {
+    color: #4d4d4d;
+
+    background: #e3e3e3;
+}
+
+
+/* =========================================
+   ACCIONES
+========================================= */
+
+.acciones-tabla {
+    display: flex;
+
+    gap: 7px;
+}
+
+.btn-tabla {
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    border-radius: 8px;
+
+    transition: 0.2s;
+}
+
+.btn-editar {
+    color: #a82c66;
+
+    background: #fce3ed;
+}
+
+.btn-editar:hover {
+    background: #d63384;
+
+    color: white;
+}
+
+.btn-eliminar {
+    color: #a52929;
+
+    background: #fde1e1;
+}
+
+.btn-eliminar:hover {
+    background: #dc3545;
+
+    color: white;
+}
+
+
+/* =========================================
+   LOADER
+========================================= */
+
+.loader-admin {
+    text-align: center;
+
+    padding: 50px;
+
+    color: #d63384;
+}
+
+.loader-admin p {
+    margin-top: 10px;
+}
+
+
+/* =========================================
+   SIN PRODUCTOS
+========================================= */
+
+.sin-productos {
+    text-align: center;
+
+    padding: 50px;
+
+    color: #806270;
+}
+
+.sin-productos i {
+    font-size: 4rem;
+
+    color: #d63384;
+}
+
+.sin-productos h3 {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 2rem;
+
+    color: #54243b;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .admin-main {
+        padding: 40px 0 60px;
+    }
+
+    .admin-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .admin-card {
+        padding: 22px;
+    }
+
+    .admin-card-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .zona-imagen,
+    .preview-container {
+        height: 300px;
+    }
+
+    .navbar-admin .nav-link {
+        margin-left: 0;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .admin-header h1 {
+        font-size: 2.8rem;
+    }
+
+    .acciones-formulario {
+        flex-direction: column-reverse;
+    }
+
+    .btn-guardar,
+    .btn-cancelar {
+        width: 100%;
+    }
+
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer-panel {
+    background: #421c2e;
+
+    color: #d9bdca;
+
+    padding: 30px 0;
+
+    margin-top: 60px;
+}
+
+.footer-panel .container {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 16px;
+}
+
+.footer-panel-marca {
+    font-family: "Cormorant Garamond", serif;
+
+    font-size: 1.4rem;
+
+    font-weight: 600;
+
+    color: #ffffff;
+
+    line-height: 1;
+}
+
+.footer-panel-marca span {
+    display: block;
+
+    font-size: 0.95rem;
+
+    color: #f0a8c6;
+}
+
+.footer-panel-links {
+    display: flex;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+.footer-panel-links a {
+    color: #d9bdca;
+
+    text-decoration: none;
+
+    font-size: 0.9rem;
+
+    transition: color 0.2s ease;
+}
+
+.footer-panel-links a:hover {
+    color: #f0a8c6;
+}
+
+.footer-panel-copy {
+    margin: 0;
+
+    font-size: 0.85rem;
+
+    color: #a988a0;
+
+    width: 100%;
+
+    text-align: center;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #71475a;
+}
+
+@media (max-width: 576px) {
+
+    .footer-panel .container {
+        flex-direction: column;
+
+        text-align: center;
+    }
+
+}
