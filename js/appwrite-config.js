@@ -23,6 +23,12 @@ client
 export const databases = new Databases(client);
 export const storage = new Storage(client);
 
+/* Se exporta también el cliente para poder usar
+   Appwrite Realtime (client.subscribe) desde otros
+   archivos, por ejemplo para detectar en vivo cuando
+   se crea, edita o elimina un producto. */
+export { client };
+
 export const DATABASE_ID = "6a9a251300006b2d084c";
 export const COLLECTION_PRODUCTOS_ID = "productos";
 export const BUCKET_PRENDAS_ID = "6a9a27aa001b8a4c0b66";

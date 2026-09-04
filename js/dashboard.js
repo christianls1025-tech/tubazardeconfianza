@@ -1,4 +1,7 @@
-import { obtenerProductos } from "./productos-service.js";
+import {
+    obtenerProductos,
+    suscribirseAProductos
+} from "./productos-service.js";
 
 let graficaDistribucion = null;
 
@@ -111,6 +114,51 @@ document.addEventListener(
             );
 
         }
+
+
+        /* ==================================
+           TIEMPO REAL
+           ----------------------------------
+           Cuando se crea, edita o elimina una
+           prenda (por ejemplo desde el panel
+           de admin), el dashboard recalcula
+           todas sus estadísticas y gráficas
+           al instante, sin recargar la página.
+        ================================== */
+
+        suscribirseAProductos(({ tipo, producto }) => {
+
+            if (tipo === "crear") {
+
+                if (!productosCargados.some(p => p.id === producto.id)) {
+                    productosCargados.push(producto);
+                }
+
+            } else if (tipo === "actualizar") {
+
+                const indice =
+                    productosCargados.findIndex(
+                        p => p.id === producto.id
+                    );
+
+                if (indice !== -1) {
+                    productosCargados[indice] = producto;
+                } else {
+                    productosCargados.push(producto);
+                }
+
+            } else if (tipo === "eliminar") {
+
+                productosCargados =
+                    productosCargados.filter(
+                        p => p.id !== producto.id
+                    );
+
+            }
+
+            calcularEstadisticas(productosCargados);
+
+        });
 
     }
 );

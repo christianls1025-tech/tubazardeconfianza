@@ -1,4 +1,8 @@
-import { obtenerProductos, urlFoto } from "./productos-service.js";
+import {
+    obtenerProductos,
+    urlFoto,
+    suscribirseAProductos
+} from "./productos-service.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -118,30 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
 
         categorias.forEach(categoria => {
-
-            const boton = document.createElement("button");
-
-            boton.className = "btn-filtro";
-
-            boton.dataset.categoria = categoria;
-
-            boton.textContent = categoria;
-
-            boton.addEventListener("click", () => {
-
-                seleccionarFiltro(
-                    filtros,
-                    boton
-                );
-
-                filtroCategoriaActual = categoria;
-
-                aplicarFiltros();
-
-            });
-
-            filtros.appendChild(boton);
-
+            agregarBotonCategoria(categoria);
         });
 
 
@@ -187,6 +168,51 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
             });
+
+    }
+
+
+    /* ==========================================
+       AGREGAR BOTÓN DE CATEGORÍA
+       ------------------------------------------
+       Se usa tanto al cargar la página como cuando,
+       en tiempo real, aparece una prenda con una
+       categoría nueva que todavía no tiene botón.
+       Si el botón ya existe, no hace nada (evita
+       duplicados).
+    ========================================== */
+
+    function agregarBotonCategoria(categoria) {
+
+        if (!categoria) return;
+
+        const yaExiste = [...filtros.querySelectorAll(".btn-filtro")]
+            .some(btn => btn.dataset.categoria === categoria);
+
+        if (yaExiste) return;
+
+        const boton = document.createElement("button");
+
+        boton.className = "btn-filtro";
+
+        boton.dataset.categoria = categoria;
+
+        boton.textContent = categoria;
+
+        boton.addEventListener("click", () => {
+
+            seleccionarFiltro(
+                filtros,
+                boton
+            );
+
+            filtroCategoriaActual = categoria;
+
+            aplicarFiltros();
+
+        });
+
+        filtros.appendChild(boton);
 
     }
 
@@ -1090,9 +1116,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* ==========================================
+       TIEMPO REAL
+       ------------------------------------------
+       Cada vez que en Appwrite se crea, edita o
+       elimina una prenda (desde el panel de admin,
+       incluso desde otro dispositivo), este catálogo
+       se actualiza solo, sin recargar la página.
+    ========================================== */
+
+    function iniciarTiempoReal() {
+
+        suscribirseAProductos(({ tipo, producto }) => {
+
+            if (tipo === "crear") {
+
+                if (!productos.some(p => p.id === producto.id)) {
+                    productos.push(producto);
+                }
+
+                agregarBotonCategoria(producto.categoria);
+
+            } else if (tipo === "actualizar") {
+
+                const indice =
+                    productos.findIndex(p => p.id === producto.id);
+
+                if (indice !== -1) {
+                    productos[indice] = producto;
+                } else {
+                    productos.push(producto);
+                }
+
+                agregarBotonCategoria(producto.categoria);
+
+            } else if (tipo === "eliminar") {
+
+                productos = productos.filter(
+                    p => p.id !== producto.id
+                );
+
+            }
+
+            productos = ordenarProductos(productos);
+
+            loader.classList.add("d-none");
+
+            aplicarFiltros();
+
+        });
+
+    }
+
+
+    /* ==========================================
        INICIAR
     ========================================== */
 
     cargarProductos();
+
+    iniciarTiempoReal();
 
 });

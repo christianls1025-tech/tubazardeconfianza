@@ -12,6 +12,7 @@
 import {
     databases,
     storage,
+    client,
     DATABASE_ID,
     COLLECTION_PRODUCTOS_ID,
     BUCKET_PRENDAS_ID
@@ -187,6 +188,64 @@ export async function actualizarProducto(id, datos, archivo) {
     );
 
     return convertirDocumento(documento);
+}
+
+/* ==========================================
+   TIEMPO REAL: ESCUCHAR CAMBIOS EN PRODUCTOS
+   ------------------------------------------
+   Se conecta al canal de Realtime de la colección
+   de productos y avisa cada vez que se crea, edita
+   o elimina un documento, sin necesidad de recargar
+   la página ni de volver a pedir todo el listado.
+
+   "onCambio" recibe un objeto:
+     { tipo: "crear" | "actualizar" | "eliminar", producto }
+
+   Devuelve una función para cancelar la suscripción
+   (por si en algún momento se necesita dejar de
+   escuchar, por ejemplo al salir de la página).
+========================================== */
+
+export function suscribirseAProductos(onCambio) {
+
+    const canal =
+        `databases.${DATABASE_ID}.collections.${COLLECTION_PRODUCTOS_ID}.documents`;
+
+    const cancelar = client.subscribe(canal, (evento) => {
+
+        const eventos = evento.events || [];
+
+        let tipo = null;
+
+        if (eventos.some(e => e.endsWith(".create"))) {
+            tipo = "crear";
+        } else if (eventos.some(e => e.endsWith(".update"))) {
+            tipo = "actualizar";
+        } else if (eventos.some(e => e.endsWith(".delete"))) {
+            tipo = "eliminar";
+        }
+
+        if (!tipo) return;
+
+        try {
+
+            const producto = convertirDocumento(evento.payload);
+
+            onCambio({ tipo, producto });
+
+        } catch (error) {
+
+            console.error(
+                "Error procesando evento en tiempo real:",
+                error
+            );
+
+        }
+
+    });
+
+    return cancelar;
+
 }
 
 /* ==========================================
