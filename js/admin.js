@@ -13,6 +13,9 @@ import {
     cerrarSesion
 } from "./auth.js";
 
+// 👇 NUEVA IMPORTACIÓN
+import { iniciarControlInactividad } from "./sesion-timeout.js";
+
 /* ==========================================
    PROTEGER EL ACCESO A ESTA PÁGINA
 ========================================== */
@@ -38,6 +41,9 @@ if (usuarioActual) {
     // ⚠️ IMPORTANTE: en lugar de usar DOMContentLoaded, se ejecuta
     // directamente porque el DOM ya está cargado (los módulos se ejecutan después)
     document.body.classList.add("sesion-verificada");
+
+    // 👇 NUEVA LÍNEA: activa el detector de inactividad
+    iniciarControlInactividad();
 
     const nombreUsuarioAdmin = document.getElementById("nombreUsuarioAdmin");
     if (nombreUsuarioAdmin) {
