@@ -1,45 +1,86 @@
 /* ==========================================
    CONTROL DE INACTIVIDAD Y CIERRE DE SESIÓN
    ------------------------------------------
-   - Redirige al login después de 5 minutos sin
-     actividad (mouse, teclado, scroll, click).
-   - Intenta cerrar la sesión al cerrar la pestaña
-     o navegador (evento beforeunload), aunque no
-     es garantizado por el navegador.
+   - Cierra la sesión automáticamente después de 10 minutos sin actividad.
+   - Muestra un SweetAlert informativo y redirige al login al confirmar.
 ========================================== */
 
-import { cerrarSesion } from "./auth.js";
+import { account } from "./appwrite-config.js";
 
-const TIEMPO_INACTIVIDAD_MS = 5 * 60 * 1000; // 5 minutos
+const TIEMPO_INACTIVIDAD_MS = 10 * 60 * 1000; // 10 minutos
 
 let temporizadorInactividad = null;
+
+/* ==========================================
+   CARGAR SWEETALERT2 (dinámico)
+========================================== */
+
+function cargarSweetAlert() {
+    return new Promise((resolve, reject) => {
+        if (window.Swal) {
+            resolve(window.Swal);
+            return;
+        }
+
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/sweetalert2@11";
+        script.onload = () => resolve(window.Swal);
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+/* ==========================================
+   CERRAR SESIÓN POR INACTIVIDAD
+========================================== */
+
+async function cerrarSesionPorInactividad() {
+    try {
+        // Eliminar la sesión actual en Appwrite (la sesión ya no queda activa)
+        await account.deleteSession("current");
+    } catch (error) {
+        console.error("Error al cerrar sesión por inactividad:", error);
+    }
+
+    try {
+        const Swal = await cargarSweetAlert();
+        await Swal.fire({
+            title: 'Sesión cerrada',
+            text: 'Se cerró la sesión por inactividad.',
+            icon: 'info',
+            confirmButtonText: 'Ir al login',
+            confirmButtonColor: '#d63384',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        });
+    } catch (error) {
+        console.error("No se pudo cargar SweetAlert:", error);
+    }
+
+    // Redirigir al login después del alert (o si falla)
+    window.location.replace("login.html");
+}
 
 /* Reinicia el temporizador en cada interacción */
 function reiniciarTemporizador() {
     clearTimeout(temporizadorInactividad);
-    temporizadorInactividad = setTimeout(() => {
-        cerrarSesion(); // Llama a auth.js -> elimina sesión y redirige a login
-    }, TIEMPO_INACTIVIDAD_MS);
+    temporizadorInactividad = setTimeout(cerrarSesionPorInactividad, TIEMPO_INACTIVIDAD_MS);
 }
 
 /* Eventos que cuentan como actividad */
-const eventosActividad = [
-    'click', 'keydown', 'mousemove', 'scroll', 'touchstart', 'resize'
-];
+const eventosActividad = ['click', 'keydown', 'mousemove', 'scroll', 'touchstart', 'resize'];
 
 /* Inicializa el detector de inactividad */
 export function iniciarControlInactividad() {
-    // Reinicia al cargar la página
     reiniciarTemporizador();
 
-    // Añade listeners
     eventosActividad.forEach(evento => {
         window.addEventListener(evento, reiniciarTemporizador);
     });
 
-    // Intenta cerrar sesión cuando se cierra la pestaña (no garantizado)
+    // Intenta cerrar sesión al cerrar la pestaña (opcional)
     window.addEventListener('beforeunload', () => {
-        cerrarSesion(); // Esto podría no completarse, pero intenta
+        account.deleteSession("current").catch(() => {});
     });
 }
 
